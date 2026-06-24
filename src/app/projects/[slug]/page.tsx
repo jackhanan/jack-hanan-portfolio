@@ -2,16 +2,14 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import { getProject, getVisibleProjects } from '@/lib/projects'
+import { getProject } from '@/lib/projects'
 import ProjectGallery from '@/components/projects/ProjectGallery'
 import FadeIn from '@/components/ui/FadeIn'
 
-export const revalidate = 0
-
-export async function generateStaticParams() {
-  const projects = await getVisibleProjects()
-  return projects.map((p) => ({ slug: p.id }))
-}
+// All project pages are rendered on-demand at request time.
+// This means new projects added via the admin appear immediately
+// without needing a redeploy.
+export const dynamic = 'force-dynamic'
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const project = await getProject(params.slug)

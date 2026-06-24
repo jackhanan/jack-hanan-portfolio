@@ -1,10 +1,11 @@
-import { redis } from './redis'
+import { getRedis } from './redis'
 import type { AboutData } from '@/types'
 import defaultAbout from '../../data/about.json'
 
 const KEY = 'about'
 
 async function getOrSeed(): Promise<AboutData> {
+  const redis = getRedis()
   const data = await redis.get<AboutData>(KEY)
   if (data) return data
 
@@ -18,5 +19,5 @@ export async function readAbout(): Promise<AboutData> {
 }
 
 export async function writeAbout(data: AboutData): Promise<void> {
-  await redis.set(KEY, data)
+  await getRedis().set(KEY, data)
 }

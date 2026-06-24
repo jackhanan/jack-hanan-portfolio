@@ -1,10 +1,11 @@
-import { redis } from './redis'
+import { getRedis } from './redis'
 import type { Project } from '@/types'
 import defaultProjects from '../../data/projects.json'
 
 const KEY = 'projects'
 
 async function getOrSeed(): Promise<Project[]> {
+  const redis = getRedis()
   const data = await redis.get<Project[]>(KEY)
   if (data) return data
 
@@ -19,7 +20,7 @@ export async function readProjects(): Promise<Project[]> {
 }
 
 export async function writeProjects(projects: Project[]): Promise<void> {
-  await redis.set(KEY, projects)
+  await getRedis().set(KEY, projects)
 }
 
 export async function getProject(id: string): Promise<Project | null> {
