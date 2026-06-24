@@ -4,10 +4,15 @@ import ProjectGrid from '@/components/projects/ProjectGrid'
 import FadeIn from '@/components/ui/FadeIn'
 
 export const metadata: Metadata = { title: 'Projects' }
-export const revalidate = 0
+export const dynamic = 'force-dynamic'
 
 export default async function ProjectsPage() {
-  const projects = await getVisibleProjects()
+  let projects: import('@/types').Project[] = []
+  try {
+    projects = await getVisibleProjects()
+  } catch {
+    // Render empty grid rather than crashing
+  }
 
   return (
     <div className="pt-32 pb-24 px-6 lg:px-12 max-w-site mx-auto">

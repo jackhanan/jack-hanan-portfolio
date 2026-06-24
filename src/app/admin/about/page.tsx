@@ -1,9 +1,26 @@
 import { readAbout } from '@/lib/about'
 import AboutEditor from '@/components/admin/AboutEditor'
+import type { AboutData } from '@/types'
 
-export const revalidate = 0
+export const dynamic = 'force-dynamic'
+
+const EMPTY: AboutData = {
+  bio: '',
+  photo: '',
+  skills: [],
+  software: [],
+  education: [],
+  email: '',
+  linkedin: '',
+  resumeUrl: '/resume.pdf',
+}
 
 export default async function AdminAboutPage() {
-  const about = await readAbout()
+  let about: AboutData = EMPTY
+  try {
+    about = await readAbout()
+  } catch {
+    // Editor will open empty; saving will persist to Redis
+  }
   return <AboutEditor initial={about} />
 }

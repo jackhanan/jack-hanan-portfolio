@@ -4,20 +4,42 @@ import defaultAbout from '../../data/about.json'
 
 const KEY = 'about'
 
+const EMPTY_ABOUT: AboutData = {
+  bio: '',
+  photo: '',
+  skills: [],
+  software: [],
+  education: [],
+  email: '',
+  linkedin: '',
+  resumeUrl: '/resume.pdf',
+}
+
 async function getOrSeed(): Promise<AboutData> {
   const redis = getRedis()
-  const data = await redis.get<AboutData>(KEY)
-  if (data) return data
+  if (!redis) return defaultAbout as AboutData
 
-  // First run — seed Redis from the bundled JSON defaults
-  await redis.set(KEY, defaultAbout)
-  return defaultAbout as AboutData
+  try {
+    const data = await redis.get<AboutData>(KEY)
+    if (data) return data
+    // First run — seed Redis from bundled defaults
+    await redis.set(KEY, defaultAbout)
+    return defaultAbout as AboutData
+  } catch {
+    return defaultAbout as AboutData
+  }
 }
 
 export async function readAbout(): Promise<AboutData> {
-  return getOrSeed()
+  try {
+    return await getOrSeed()
+  } catch {
+    return EMPTY_ABOUT
+  }
 }
 
 export async function writeAbout(data: AboutData): Promise<void> {
-  await getRedis().set(KEY, data)
+  const redis = getRedis()
+  if (!redis) throw new Error('Redis is not configured')
+  await redis.set(KEY, data)
 }

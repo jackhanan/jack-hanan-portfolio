@@ -6,36 +6,59 @@ const KEY = 'projects'
 
 async function getOrSeed(): Promise<Project[]> {
   const redis = getRedis()
-  const data = await redis.get<Project[]>(KEY)
-  if (data) return data
+  if (!redis) return defaultProjects as Project[]
 
-  // First run — seed Redis from the bundled JSON defaults
-  await redis.set(KEY, defaultProjects)
-  return defaultProjects as Project[]
+  try {
+    const data = await redis.get<Project[]>(KEY)
+    if (data) return data
+    // First run — seed Redis from bundled defaults
+    await redis.set(KEY, defaultProjects)
+    return defaultProjects as Project[]
+  } catch {
+    return defaultProjects as Project[]
+  }
 }
 
 export async function readProjects(): Promise<Project[]> {
-  const projects = await getOrSeed()
-  return [...projects].sort((a, b) => a.order - b.order)
+  try {
+    const projects = await getOrSeed()
+    return [...projects].sort((a, b) => a.order - b.order)
+  } catch {
+    return []
+  }
 }
 
 export async function writeProjects(projects: Project[]): Promise<void> {
-  await getRedis().set(KEY, projects)
+  const redis = getRedis()
+  if (!redis) throw new Error('Redis is not configured')
+  await redis.set(KEY, projects)
 }
 
 export async function getProject(id: string): Promise<Project | null> {
-  const projects = await readProjects()
-  return projects.find((p) => p.id === id) ?? null
+  try {
+    const projects = await readProjects()
+    return projects.find((p) => p.id === id) ?? null
+  } catch {
+    return null
+  }
 }
 
 export async function getVisibleProjects(): Promise<Project[]> {
-  const projects = await readProjects()
-  return projects.filter((p) => p.visible)
+  try {
+    const projects = await readProjects()
+    return projects.filter((p) => p.visible)
+  } catch {
+    return []
+  }
 }
 
 export async function getFeaturedProjects(): Promise<Project[]> {
-  const projects = await readProjects()
-  return projects.filter((p) => p.visible && p.featured)
+  try {
+    const projects = await readProjects()
+    return projects.filter((p) => p.visible && p.featured)
+  } catch {
+    return []
+  }
 }
 
 export function slugify(title: string): string {
