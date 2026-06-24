@@ -1,0 +1,68 @@
+[
+  {
+    "id": "urban-threshold",
+    "title": "Urban Threshold",
+    "year": 2024,
+    "category": "Academic",
+    "description": "A speculative urban intervention exploring the boundary between public infrastructure and private dwelling. The project examines how threshold conditions — moments of transition between inside and outside, public and private — can become architecturally charged spaces that mediate the city's social fabric.\n\nSited at the junction of two distinct urban morphologies in Melbourne's inner north, the proposal creates a series of compressed and expanded moments that draw pedestrians through the site and into a negotiated commons above. The structural logic is exposed throughout, with a concrete waffle slab serving as both ceiling and inhabited landscape.",
+    "heroImage": "/uploads/urban-threshold/hero.jpg",
+    "gallery": [
+      "/uploads/urban-threshold/01.jpg",
+      "/uploads/urban-threshold/02.jpg",
+      "/uploads/urban-threshold/03.jpg",
+      "/uploads/urban-threshold/04.jpg"
+    ],
+    "featured": true,
+    "order": 0,
+    "visible": true
+  },
+  {
+    "id": "material-archive",
+    "title": "Material Archive",
+    "year": 2023,
+    "category": "Research",
+    "description": "An investigation into the sensory and tectonic qualities of raw materials as architectural memory. Working with brick, timber, and rammed earth sourced from demolished structures, the project creates a taxonomy of material histories.\n\nThe resulting installation occupied the university atrium for six weeks, inviting visitors to engage with the textures, weights, and temperatures of found materials that carry traces of their previous lives.",
+    "heroImage": "/uploads/material-archive/hero.jpg",
+    "gallery": [
+      "/uploads/material-archive/01.jpg",
+      "/uploads/material-archive/02.jpg",
+      "/uploads/material-archive/03.jpg"
+    ],
+    "featured": true,
+    "order": 1,
+    "visible": true
+  },
+  {
+    "id": "civic-ground",
+    "title": "Civic Ground",
+    "year": 2023,
+    "category": "Academic",
+    "description": "A community library and civic hall for a post-industrial suburb. The project prioritises ground-level activation and civic legibility, with a permeable ground floor that extends the public realm into the building.\n\nThe sectional organisation creates a series of interconnected reading rooms at varying scales, from intimate alcoves to a double-height central hall. Exposed CLT structure and polished concrete reflect the neighbourhood's industrial heritage while signalling civic investment.",
+    "heroImage": "/uploads/civic-ground/hero.jpg",
+    "gallery": [
+      "/uploads/civic-ground/01.jpg",
+      "/uploads/civic-ground/02.jpg",
+      "/uploads/civic-ground/03.jpg",
+      "/uploads/civic-ground/04.jpg",
+      "/uploads/civic-ground/05.jpg"
+    ],
+    "featured": true,
+    "order": 2,
+    "visible": true
+  },
+  {
+    "id": "tectonics-of-shelter",
+    "title": "Tectonics of Shelter",
+    "year": 2022,
+    "category": "Academic",
+    "description": "A study in minimum means and maximum effect. Working within a strict material budget, this temporary pavilion explores how a simple steel frame and polycarbonate skin can create atmospheric differentiation through section and orientation.\n\nThe pavilion was constructed on site by a team of six students over three days and hosted a series of public events before being dismantled and the materials returned.",
+    "heroImage": "/uploads/tectonics-of-shelter/hero.jpg",
+    "gallery": [
+      "/uploads/tectonics-of-shelter/01.jpg",
+      "/uploads/tectonics-of-shelter/02.jpg"
+    ],
+    "featured": false,
+    "order": 3,
+    "visible": true
+  }
+]

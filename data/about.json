@@ -1,0 +1,43 @@
+{
+  "bio": "I'm Jack Hanan, a fifth-year architecture student at the University of Melbourne with a particular interest in the intersection of civic infrastructure, material culture, and urban form.\n\nMy work oscillates between the tectonic and the speculative — from carefully constructed pavilions to large-scale urban proposals. I'm drawn to architecture that negotiates honestly with its context: its ground, its neighbours, its history.\n\nI'm currently seeking graduate positions at practices working at the intersection of architecture and urbanism, with an interest in mid-scale civic and residential projects.",
+  "photo": "/profile.jpg",
+  "skills": [
+    "Design Development",
+    "Construction Documentation",
+    "Urban Design",
+    "Material Research",
+    "Site Analysis",
+    "Structural Coordination",
+    "Client Presentation",
+    "Project Management"
+  ],
+  "software": [
+    "Revit",
+    "AutoCAD",
+    "Rhino 3D",
+    "Grasshopper",
+    "ArchiCAD",
+    "Adobe InDesign",
+    "Adobe Photoshop",
+    "Illustrator",
+    "SketchUp",
+    "Lumion",
+    "Enscape",
+    "Figma"
+  ],
+  "education": [
+    {
+      "institution": "University of Melbourne",
+      "degree": "Master of Architecture",
+      "year": "2023 – 2025"
+    },
+    {
+      "institution": "University of Melbourne",
+      "degree": "Bachelor of Environments (Architecture)",
+      "year": "2020 – 2022"
+    }
+  ],
+  "email": "jack.hanan@gmail.com",
+  "linkedin": "https://linkedin.com/in/jackhanan",
+  "resumeUrl": "/resume.pdf"
+}

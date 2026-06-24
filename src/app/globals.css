@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&display=swap');
+
+:root {
+  --font-cormorant: 'Cormorant Garamond', Georgia, serif;
+  --font-dm-sans: 'DM Sans', system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    @apply bg-canvas text-charcoal antialiased;
+    font-family: var(--font-dm-sans);
+  }
+
+  body {
+    @apply min-h-screen;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-cormorant);
+    @apply font-light tracking-tight;
+  }
+
+  /* Selection */
+  ::selection {
+    @apply bg-accent/20 text-charcoal;
+  }
+
+  /* Focus visible only for keyboard */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-accent;
+  }
+
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+}
+
+@layer utilities {
+  .font-serif {
+    font-family: var(--font-cormorant);
+  }
+
+  .font-sans {
+    font-family: var(--font-dm-sans);
+  }
+
+  /* Architectural rule — a thin horizontal divider */
+  .arch-rule {
+    @apply border-t border-charcoal/10;
+  }
+
+  /* Project card image hover */
+  .project-card-img {
+    @apply transition-transform duration-700 ease-arch;
+  }
+
+  .project-card:hover .project-card-img {
+    @apply scale-[1.02];
+  }
+
+  /* Text balance for headlines */
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
