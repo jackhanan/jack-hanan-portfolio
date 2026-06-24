@@ -21,11 +21,16 @@ export async function POST(request: Request) {
   const ext = file.name.split('.').pop() ?? 'jpg'
   const filename = `${Date.now()}.${ext}`
 
+  // Always write to public/uploads so Next.js can serve the files statically.
+  // On Railway, mount your volume at /app/public/uploads (or use DATA_DIR for data files
+  // and keep uploads in public/ which Railway persists if the volume covers /app/public).
   const uploadDir = path.join(process.cwd(), 'public', 'uploads', slug)
   await mkdir(uploadDir, { recursive: true })
 
   const bytes = await file.arrayBuffer()
   await writeFile(path.join(uploadDir, filename), Buffer.from(bytes))
+
+  console.log(`[upload] Saved ${filename} to ${uploadDir}`)
 
   return NextResponse.json({ url: `/uploads/${slug}/${filename}` })
 }

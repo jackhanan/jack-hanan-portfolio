@@ -1,0 +1,26 @@
+[build]
+builder = "nixpacks"
+
+[deploy]
+startCommand = "npm start"
+healthcheckPath = "/"
+healthcheckTimeout = 30
+restartPolicyType = "on_failure"
+
+# ──────────────────────────────────────────────
+# PERSISTENT STORAGE SETUP (do this in Railway dashboard)
+# ──────────────────────────────────────────────
+#
+# 1. In Railway dashboard → your service → "Volumes" tab
+#    → Add Volume, mount path: /data
+#
+# 2. In Railway dashboard → your service → "Variables" tab
+#    → Add: DATA_DIR = /data
+#
+# 3. For uploaded images to persist, add a second volume:
+#    → Add Volume, mount path: /app/public/uploads
+#
+# On first boot after adding the volume, the app will
+# automatically copy data/projects.json and data/about.json
+# into the volume — you won't lose your seed data.
+# ──────────────────────────────────────────────
