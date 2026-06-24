@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd'
 import Toggle from '@/components/ui/Toggle'
@@ -14,6 +15,7 @@ interface Props {
 export default function DashboardClient({ initial }: Props) {
   const [projects, setProjects] = useState<Project[]>(initial)
   const [saving, setSaving] = useState(false)
+  const router = useRouter()
 
   async function handleDragEnd(result: DropResult) {
     if (!result.destination) return
@@ -30,6 +32,7 @@ export default function DashboardClient({ initial }: Props) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(withOrder),
     })
+    router.refresh()
     setSaving(false)
   }
 
@@ -41,6 +44,7 @@ export default function DashboardClient({ initial }: Props) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ visible }),
     })
+    router.refresh()
   }
 
   return (

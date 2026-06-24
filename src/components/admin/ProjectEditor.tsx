@@ -39,6 +39,7 @@ export default function ProjectEditor({ initial, isNew = false }: Props) {
 
     if (res.ok) {
       setSaved(true)
+      router.refresh()
       if (isNew) {
         const created = await res.json()
         router.push(`/admin/projects/${created.id}`)

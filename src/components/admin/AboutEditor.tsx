@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import ImageUploadZone from './ImageUploadZone'
 import type { AboutData, EducationEntry } from '@/types'
 
@@ -12,6 +13,7 @@ export default function AboutEditor({ initial }: Props) {
   const [data, setData] = useState<AboutData>(initial)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const router = useRouter()
 
   function update<K extends keyof AboutData>(key: K, value: AboutData[K]) {
     setData((d) => ({ ...d, [key]: value }))
@@ -41,12 +43,15 @@ export default function AboutEditor({ initial }: Props) {
 
   async function handleSave() {
     setSaving(true)
-    await fetch('/api/about', {
+    const res = await fetch('/api/about', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     })
-    setSaved(true)
+    if (res.ok) {
+      setSaved(true)
+      router.refresh()
+    }
     setSaving(false)
   }
 
