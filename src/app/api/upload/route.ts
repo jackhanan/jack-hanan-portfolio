@@ -30,7 +30,5 @@ export async function POST(request: Request) {
   const bytes = await file.arrayBuffer()
   await writeFile(path.join(uploadDir, filename), Buffer.from(bytes))
 
-  console.log(`[upload] Saved ${filename} to ${uploadDir}`)
-
   return NextResponse.json({ url: `/uploads/${slug}/${filename}` })
 }
