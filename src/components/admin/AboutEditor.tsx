@@ -184,6 +184,19 @@ export default function AboutEditor({ initial }: Props) {
             + Add entry
           </button>
         </div>
+
+        {/* Bottom save bar */}
+        <div className="flex items-center justify-between pt-6 border-t border-[#2A2A28]">
+          {saved && <span className="text-xs text-green-400 font-sans">All changes saved</span>}
+          {!saved && <span className="text-xs text-[#555550] font-sans">Unsaved changes</span>}
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="text-xs tracking-widest uppercase font-sans text-[#111110] bg-[#E8E8E4] hover:bg-[#6B7C9B] hover:text-white px-6 py-2.5 rounded transition-colors duration-150 cursor-pointer disabled:opacity-50"
+          >
+            {saving ? 'Saving…' : 'Save Changes'}
+          </button>
+        </div>
       </div>
     </div>
   )
