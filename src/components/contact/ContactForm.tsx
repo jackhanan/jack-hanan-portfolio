@@ -137,7 +137,7 @@ export default function ContactForm({ email, linkedin }: Props) {
                   rel="noopener noreferrer"
                   className="text-sm text-charcoal hover:text-accent transition-colors duration-200 font-sans"
                 >
-                  {linkedin.replace(/^https?:\/\/(www\.)?/, '')}
+                  Jack Hanan
                 </a>
               </div>
             )}
