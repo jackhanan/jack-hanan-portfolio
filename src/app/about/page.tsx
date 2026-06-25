@@ -54,7 +54,8 @@ export default async function AboutPage() {
                 <div>
                   <a
                     href={about.resumeUrl}
-                    download
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 text-sm text-charcoal border border-charcoal/20 px-5 py-2.5 hover:border-accent hover:text-accent transition-colors duration-200 font-sans tracking-wide"
                   >
                     <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none" aria-hidden="true">
