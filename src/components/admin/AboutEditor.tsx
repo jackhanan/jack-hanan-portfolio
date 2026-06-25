@@ -100,6 +100,44 @@ export default function AboutEditor({ initial }: Props) {
       )}
 
       <div className="space-y-6">
+        {/* Homepage hero fields */}
+        <div className="space-y-4 pb-4 border-b border-[#2A2A28]">
+          <p className="text-xs tracking-widest uppercase text-[#888882] font-sans">Homepage Hero</p>
+          <div>
+            <label htmlFor="heroEyebrow" className={labelClass}>Eyebrow text</label>
+            <input
+              id="heroEyebrow"
+              type="text"
+              value={data.heroEyebrow ?? ''}
+              onChange={(e) => update('heroEyebrow', e.target.value)}
+              className={inputClass}
+              placeholder="Architecture Student / Designer"
+            />
+          </div>
+          <div>
+            <label htmlFor="heroName" className={labelClass}>Name / Headline</label>
+            <input
+              id="heroName"
+              type="text"
+              value={data.heroName ?? ''}
+              onChange={(e) => update('heroName', e.target.value)}
+              className={inputClass}
+              placeholder="Jack Hanan"
+            />
+          </div>
+          <div>
+            <label htmlFor="heroTagline" className={labelClass}>Tagline</label>
+            <textarea
+              id="heroTagline"
+              rows={3}
+              value={data.heroTagline ?? ''}
+              onChange={(e) => update('heroTagline', e.target.value)}
+              className={`${inputClass} resize-y`}
+              placeholder="Based in Melbourne. Interested in…"
+            />
+          </div>
+        </div>
+
         {/* Photo */}
         <ImageUploadZone
           currentImage={data.photo}

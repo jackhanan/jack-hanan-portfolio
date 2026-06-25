@@ -19,6 +19,9 @@ export interface EducationEntry {
 }
 
 export interface AboutData {
+  heroEyebrow: string
+  heroName: string
+  heroTagline: string
   bio: string
   photo: string
   skills: string[]

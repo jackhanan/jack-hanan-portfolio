@@ -5,6 +5,9 @@ import defaultAbout from '../../data/about.json'
 const KEY = 'about'
 
 const EMPTY_ABOUT: AboutData = {
+  heroEyebrow: '',
+  heroName: '',
+  heroTagline: '',
   bio: '',
   photo: '',
   skills: [],
@@ -15,18 +18,27 @@ const EMPTY_ABOUT: AboutData = {
   resumeUrl: '/resume.pdf',
 }
 
+// Backfill new hero fields for data stored before they were added.
+function normalise(d: AboutData): AboutData {
+  return {
+    heroEyebrow: d.heroEyebrow ?? 'Architecture Student / Designer',
+    heroName: d.heroName ?? 'Jack Hanan',
+    heroTagline: d.heroTagline ?? '',
+    ...d,
+  }
+}
+
 async function getOrSeed(): Promise<AboutData> {
   const redis = getRedis()
-  if (!redis) return defaultAbout as AboutData
+  if (!redis) return normalise(defaultAbout as AboutData)
 
   try {
     const data = await redis.get<AboutData>(KEY)
-    if (data) return data
-    // First run — seed Redis from bundled defaults
+    if (data) return normalise(data)
     await redis.set(KEY, defaultAbout)
-    return defaultAbout as AboutData
+    return normalise(defaultAbout as AboutData)
   } catch {
-    return defaultAbout as AboutData
+    return normalise(defaultAbout as AboutData)
   }
 }
 
