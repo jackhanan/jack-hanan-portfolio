@@ -147,6 +147,7 @@ export default function DashboardClient({ initial }: Props) {
                         checked={project.visible}
                         onChange={(v) => toggleVisibility(project.id, v)}
                         id={`visible-${project.id}`}
+                        label="Visible on site"
                       />
 
                       {/* Edit link */}

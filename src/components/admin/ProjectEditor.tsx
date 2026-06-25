@@ -198,12 +198,6 @@ export default function ProjectEditor({ initial, isNew = false }: Props) {
         {/* Toggles */}
         <div className="flex items-center gap-8 pt-2">
           <Toggle
-            checked={project.visible}
-            onChange={(v) => update('visible', v)}
-            label="Visible on site"
-            id="visible"
-          />
-          <Toggle
             checked={project.featured}
             onChange={(v) => update('featured', v)}
             label="Featured on homepage"
