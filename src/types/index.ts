@@ -6,6 +6,7 @@ export interface Project {
   description: string
   heroImage: string
   gallery: string[]
+  drawings: string[]
   featured: boolean
   order: number
   visible: boolean

@@ -87,6 +87,30 @@ export default async function ProjectPage({ params }: { params: { slug: string }
         </div>
       </FadeIn>
 
+      {/* Drawings — full-width, uncropped, one per row */}
+      {project.drawings && project.drawings.length > 0 && (
+        <FadeIn delay={250}>
+          <div className="max-w-site mx-auto px-6 lg:px-12 mt-20">
+            <div className="arch-rule pt-8 mb-12">
+              <h2 className="font-sans text-xs tracking-widest uppercase text-mid">Drawings</h2>
+            </div>
+            <div className="space-y-16">
+              {project.drawings.map((src, i) => (
+                <figure key={src + i} className="w-full">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={src}
+                    alt={`${project.title} — drawing ${i + 1}`}
+                    className="w-full h-auto block"
+                    loading="lazy"
+                  />
+                </figure>
+              ))}
+            </div>
+          </div>
+        </FadeIn>
+      )}
+
       {/* Back link */}
       <div className="max-w-site mx-auto px-6 lg:px-12 mt-20 mb-8">
         <Link

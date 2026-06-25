@@ -20,7 +20,7 @@ export default function Toggle({ checked, onChange, label, id }: Props) {
         />
         <div
           className={`w-10 h-5 rounded-full transition-colors duration-200 ${
-            checked ? 'bg-accent' : 'bg-charcoal/20'
+            checked ? 'bg-accent' : 'bg-[#3A3A38]'
           }`}
         />
         <div
@@ -29,7 +29,7 @@ export default function Toggle({ checked, onChange, label, id }: Props) {
           }`}
         />
       </div>
-      {label && <span className="text-sm text-charcoal/70">{label}</span>}
+      {label && <span className="text-sm text-[#E5E5E5] font-sans">{label}</span>}
     </label>
   )
 }

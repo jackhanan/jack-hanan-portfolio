@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import ImageUploadZone from './ImageUploadZone'
 import GalleryManager from './GalleryManager'
+import DrawingsManager from './DrawingsManager'
 import Toggle from '@/components/ui/Toggle'
 import type { Project } from '@/types'
 
@@ -185,6 +186,13 @@ export default function ProjectEditor({ initial, isNew = false }: Props) {
           images={project.gallery}
           slug={project.id || 'new'}
           onChange={(imgs) => update('gallery', imgs)}
+        />
+
+        {/* Drawings */}
+        <DrawingsManager
+          images={project.drawings ?? []}
+          slug={project.id || 'new'}
+          onChange={(imgs) => update('drawings', imgs)}
         />
 
         {/* Toggles */}

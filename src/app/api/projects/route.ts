@@ -49,6 +49,7 @@ export async function POST(request: Request) {
       description: body.description ?? '',
       heroImage: body.heroImage ?? '',
       gallery: body.gallery ?? [],
+      drawings: body.drawings ?? [],
       featured: body.featured ?? false,
       order: projects.length,
       visible: body.visible ?? false,
