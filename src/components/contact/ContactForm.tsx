@@ -3,7 +3,12 @@
 import { useState } from 'react'
 import FadeIn from '@/components/ui/FadeIn'
 
-export default function ContactForm() {
+interface Props {
+  email: string
+  linkedin: string
+}
+
+export default function ContactForm({ email, linkedin }: Props) {
   const [form, setForm] = useState({ name: '', email: '', message: '' })
   const [sent, setSent] = useState(false)
 
@@ -13,8 +18,9 @@ export default function ContactForm() {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    const to = email || 'jack.hanan@gmail.com'
     const body = `Name: ${form.name}%0AEmail: ${form.email}%0A%0A${form.message}`
-    window.location.href = `mailto:jack.hanan@gmail.com?subject=Portfolio Enquiry — ${form.name}&body=${body}`
+    window.location.href = `mailto:${to}?subject=Portfolio Enquiry — ${form.name}&body=${body}`
     setSent(true)
   }
 
@@ -40,7 +46,7 @@ export default function ContactForm() {
                 </p>
                 <p className="text-sm text-mid mt-3 font-sans">
                   If nothing happened,{' '}
-                  <a href="mailto:jack.hanan@gmail.com" className="text-accent hover:underline">
+                  <a href={`mailto:${email || 'jack.hanan@gmail.com'}`} className="text-accent hover:underline">
                     send directly
                   </a>
                   .
@@ -110,27 +116,31 @@ export default function ContactForm() {
 
           {/* Contact details */}
           <div className="lg:col-span-4 lg:col-start-9 space-y-8">
-            <div>
-              <p className="text-xs tracking-widest uppercase text-mid font-sans mb-2">Email</p>
-              <a
-                href="mailto:jack.hanan@gmail.com"
-                className="text-sm text-charcoal hover:text-accent transition-colors duration-200 font-sans"
-              >
-                jack.hanan@gmail.com
-              </a>
-            </div>
+            {email && (
+              <div>
+                <p className="text-xs tracking-widest uppercase text-mid font-sans mb-2">Email</p>
+                <a
+                  href={`mailto:${email}`}
+                  className="text-sm text-charcoal hover:text-accent transition-colors duration-200 font-sans"
+                >
+                  {email}
+                </a>
+              </div>
+            )}
 
-            <div>
-              <p className="text-xs tracking-widest uppercase text-mid font-sans mb-2">LinkedIn</p>
-              <a
-                href="https://linkedin.com/in/jackhanan"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-charcoal hover:text-accent transition-colors duration-200 font-sans"
-              >
-                linkedin.com/in/jackhanan
-              </a>
-            </div>
+            {linkedin && (
+              <div>
+                <p className="text-xs tracking-widest uppercase text-mid font-sans mb-2">LinkedIn</p>
+                <a
+                  href={linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-charcoal hover:text-accent transition-colors duration-200 font-sans"
+                >
+                  {linkedin.replace(/^https?:\/\/(www\.)?/, '')}
+                </a>
+              </div>
+            )}
 
             <div>
               <p className="text-xs tracking-widest uppercase text-mid font-sans mb-2">Based in</p>
