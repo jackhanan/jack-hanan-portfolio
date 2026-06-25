@@ -21,7 +21,7 @@ async function getOrSeed(): Promise<Project[]> {
 
 // Backfill any project stored before the drawings field was added.
 function normalise(p: Project): Project {
-  return { drawings: [], ...p }
+  return { ...p, drawings: p.drawings ?? [] }
 }
 
 export async function readProjects(): Promise<Project[]> {
