@@ -21,10 +21,11 @@ const EMPTY_ABOUT: AboutData = {
 // Backfill new hero fields for data stored before they were added.
 function normalise(d: AboutData): AboutData {
   return {
+    ...d,
     heroEyebrow: d.heroEyebrow ?? 'Architecture Student / Designer',
     heroName: d.heroName ?? 'Jack Hanan',
     heroTagline: d.heroTagline ?? '',
-    ...d,
+    resumeUrl: d.resumeUrl ?? '',
   }
 }
 
