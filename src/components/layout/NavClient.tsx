@@ -41,7 +41,7 @@ export default function NavClient({ projects }: Props) {
     pathname === href || (href !== '/' && pathname.startsWith(href))
 
   const linkClass = (href: string) =>
-    `text-sm tracking-wide transition-colors duration-200 ${
+    `nav-underline text-sm tracking-wide transition-colors duration-200 ${
       isActive(href) ? 'text-charcoal' : 'text-mid hover:text-charcoal'
     }`
 

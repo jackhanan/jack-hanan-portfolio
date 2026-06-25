@@ -32,7 +32,7 @@ export default async function ProjectPage({ params }: { params: { slug: string }
             src={project.heroImage}
             alt={project.title}
             fill
-            className="object-cover"
+            className="object-cover hero-ken-burns"
             priority
           />
         </div>

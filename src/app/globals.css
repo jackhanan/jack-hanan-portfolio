@@ -24,12 +24,10 @@
     @apply font-light tracking-tight;
   }
 
-  /* Selection */
   ::selection {
     @apply bg-accent/20 text-charcoal;
   }
 
-  /* Focus visible only for keyboard */
   :focus-visible {
     @apply outline-2 outline-offset-2 outline-accent;
   }
@@ -48,30 +46,71 @@
     font-family: var(--font-dm-sans);
   }
 
-  /* Architectural rule — a thin horizontal divider */
   .arch-rule {
     @apply border-t border-charcoal/10;
   }
 
-  /* Project card image hover */
-  .project-card-img {
-    @apply transition-transform duration-700 ease-arch;
-  }
-
-  .project-card:hover .project-card-img {
-    @apply scale-[1.02];
-  }
-
-  /* Text balance for headlines */
   .text-balance {
     text-wrap: balance;
   }
 }
 
-/* Reduced motion */
+/* ─── Project card image: subtle scale on hover ─── */
+.project-card-img {
+  transition: transform 700ms cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+.project-card:hover .project-card-img {
+  transform: scale(1.03);
+}
+
+/* ─── Card staggered entrance on scroll ─── */
+@keyframes cardFadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.card-enter {
+  opacity: 0;
+  animation: cardFadeUp 0.7s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+  animation-delay: calc(var(--card-index, 0) * 80ms + 100ms);
+}
+
+/* ─── Ken Burns on project hero image ─── */
+@keyframes kenBurns {
+  from { transform: scale(1); }
+  to   { transform: scale(1.05); }
+}
+
+.hero-ken-burns {
+  animation: kenBurns 8s ease-in-out forwards;
+}
+
+/* ─── Nav link underline slide-in ─── */
+.nav-underline {
+  position: relative;
+}
+.nav-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: currentColor;
+  transition: width 300ms cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+.nav-underline:hover::after {
+  width: 100%;
+}
+
+/* ─── Reduced motion: disable everything ─── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
     transition-duration: 0.01ms !important;
+  }
+  .card-enter {
+    opacity: 1;
   }
 }

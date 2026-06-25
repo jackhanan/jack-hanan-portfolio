@@ -5,15 +5,17 @@ import type { Project } from '@/types'
 interface Props {
   project: Project
   priority?: boolean
+  index?: number
 }
 
-export default function ProjectCard({ project, priority = false }: Props) {
+export default function ProjectCard({ project, priority = false, index = 0 }: Props) {
   return (
     <Link
       href={`/projects/${project.id}`}
-      className="project-card group block cursor-pointer"
+      className="project-card group block cursor-pointer card-enter"
+      style={{ '--card-index': index } as React.CSSProperties}
     >
-      {/* Image container — 4:3 aspect */}
+      {/* Image — clean, no metadata below */}
       <div className="relative overflow-hidden bg-charcoal/5 aspect-[4/3]">
         {project.heroImage ? (
           <Image
@@ -39,16 +41,6 @@ export default function ProjectCard({ project, priority = false }: Props) {
             </p>
           </div>
         </div>
-      </div>
-
-      {/* Below-image metadata */}
-      <div className="mt-3">
-        <h3 className="font-serif text-xl font-light text-charcoal group-hover:text-accent transition-colors duration-200">
-          {project.title}
-        </h3>
-        <p className="text-xs text-mid mt-1 font-sans tracking-wide">
-          {project.year} &nbsp;·&nbsp; {project.category}
-        </p>
       </div>
     </Link>
   )

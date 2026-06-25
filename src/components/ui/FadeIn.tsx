@@ -6,9 +6,11 @@ interface Props {
   children: React.ReactNode
   delay?: number
   className?: string
+  /** How far to drift upward from (px). Defaults to 20. */
+  drift?: number
 }
 
-export default function FadeIn({ children, delay = 0, className = '' }: Props) {
+export default function FadeIn({ children, delay = 0, className = '', drift = 20 }: Props) {
   const ref = useRef<HTMLDivElement>(null)
   const [visible, setVisible] = useState(false)
 
@@ -21,7 +23,7 @@ export default function FadeIn({ children, delay = 0, className = '' }: Props) {
             observer.disconnect()
           }
         },
-        { threshold: 0.1 }
+        { threshold: 0.08 }
       )
       if (ref.current) observer.observe(ref.current)
       return () => observer.disconnect()
@@ -32,9 +34,11 @@ export default function FadeIn({ children, delay = 0, className = '' }: Props) {
   return (
     <div
       ref={ref}
-      className={`transition-all duration-700 ease-arch ${
-        visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-      } ${className}`}
+      className={`transition-[opacity,transform] duration-[800ms] ease-arch ${className}`}
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? 'translateY(0)' : `translateY(${drift}px)`,
+      }}
     >
       {children}
     </div>
