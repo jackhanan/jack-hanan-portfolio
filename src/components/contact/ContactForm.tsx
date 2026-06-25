@@ -9,20 +9,39 @@ interface Props {
   basedIn: string
 }
 
+type Status = 'idle' | 'sending' | 'success' | 'error'
+
 export default function ContactForm({ email, linkedin, basedIn }: Props) {
   const [form, setForm] = useState({ name: '', email: '', message: '' })
-  const [sent, setSent] = useState(false)
+  const [status, setStatus] = useState<Status>('idle')
+  const [errorMsg, setErrorMsg] = useState('')
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }))
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    const to = email || 'jack.hanan@gmail.com'
-    const body = `Name: ${form.name}%0AEmail: ${form.email}%0A%0A${form.message}`
-    window.location.href = `mailto:${to}?subject=Portfolio Enquiry — ${form.name}&body=${body}`
-    setSent(true)
+    setStatus('sending')
+    setErrorMsg('')
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setErrorMsg(data.error ?? 'Something went wrong.')
+        setStatus('error')
+      } else {
+        setStatus('success')
+      }
+    } catch {
+      setErrorMsg('Network error — please try again.')
+      setStatus('error')
+    }
   }
 
   const inputClass =
@@ -40,17 +59,13 @@ export default function ContactForm({ email, linkedin, basedIn }: Props) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
           {/* Form */}
           <div className="lg:col-span-6">
-            {sent ? (
+            {status === 'success' ? (
               <div className="py-12">
                 <p className="font-serif text-2xl font-light text-charcoal">
-                  Your email client has opened.
+                  Message sent.
                 </p>
                 <p className="text-sm text-mid mt-3 font-sans">
-                  If nothing happened,{' '}
-                  <a href={`mailto:${email || 'jack.hanan@gmail.com'}`} className="text-accent hover:underline">
-                    send directly
-                  </a>
-                  .
+                  Thanks for getting in touch — I'll be in touch soon.
                 </p>
               </div>
             ) : (
@@ -105,11 +120,16 @@ export default function ContactForm({ email, linkedin, basedIn }: Props) {
                   />
                 </div>
 
+                {status === 'error' && (
+                  <p className="text-sm font-sans text-red-600">{errorMsg}</p>
+                )}
+
                 <button
                   type="submit"
-                  className="text-sm tracking-widest uppercase font-sans text-canvas bg-charcoal px-8 py-3 hover:bg-accent transition-colors duration-200 cursor-pointer"
+                  disabled={status === 'sending'}
+                  className="text-sm tracking-widest uppercase font-sans text-canvas bg-charcoal px-8 py-3 hover:bg-accent transition-colors duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Send Message
+                  {status === 'sending' ? 'Sending…' : 'Send Message'}
                 </button>
               </form>
             )}
