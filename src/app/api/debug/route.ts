@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { isValidToken } from '@/lib/auth'
 import { getRedis } from '@/lib/redis'
+import { readAbout } from '@/lib/about'
 
 // Auth-gated debug endpoint — only accessible when logged in as admin
 export async function GET() {
@@ -24,11 +25,20 @@ export async function GET() {
     }
   }
 
+  let resumeUrl: string = '(could not read)'
+  try {
+    const about = await readAbout()
+    resumeUrl = about.resumeUrl || '(empty string)'
+  } catch (err) {
+    resumeUrl = `ERROR: ${String(err)}`
+  }
+
   return NextResponse.json({
     UPSTASH_REDIS_REST_URL: hasUrl ? 'SET' : 'MISSING',
     UPSTASH_REDIS_REST_TOKEN: hasToken ? 'SET' : 'MISSING',
     redis_client: redis ? 'initialized' : 'null (env vars absent)',
     redis_ping: pingResult,
+    about_resumeUrl: resumeUrl,
     node_env: process.env.NODE_ENV,
     timestamp: new Date().toISOString(),
   })
