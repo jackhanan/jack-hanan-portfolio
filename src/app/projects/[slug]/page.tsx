@@ -24,7 +24,7 @@ export default async function ProjectPage({ params }: { params: { slug: string }
   const paragraphs = project.description.split('\n\n').filter(Boolean)
 
   return (
-    <article className="pt-24">
+    <article className="pt-16 md:pt-24">
       {/* Full-bleed hero */}
       {project.heroImage && (
         <div className="relative w-full h-[60vh] md:h-[75vh] overflow-hidden bg-charcoal/10">
@@ -40,7 +40,7 @@ export default async function ProjectPage({ params }: { params: { slug: string }
 
       {/* Project header */}
       <FadeIn>
-        <div className="max-w-site mx-auto px-6 lg:px-12 mt-12">
+        <div className="max-w-site mx-auto px-6 lg:px-12 mt-8 md:mt-12">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
             <div className="lg:col-span-8">
               <h1 className="font-serif text-display font-light text-charcoal text-balance">
@@ -65,7 +65,7 @@ export default async function ProjectPage({ params }: { params: { slug: string }
 
       {/* Description */}
       <FadeIn delay={150}>
-        <div className="max-w-site mx-auto px-6 lg:px-12 mt-12">
+        <div className="max-w-site mx-auto px-6 lg:px-12 mt-8 md:mt-12">
           <div className="arch-rule pt-10">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16">
               <div className="lg:col-start-1 lg:col-span-7 space-y-5">

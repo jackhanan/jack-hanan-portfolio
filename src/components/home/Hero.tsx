@@ -10,7 +10,7 @@ export default async function Hero() {
   }
 
   return (
-    <section className="pt-40 pb-24 px-6 lg:px-12 max-w-site mx-auto">
+    <section className="pt-28 md:pt-40 pb-16 md:pb-24 px-6 lg:px-12 max-w-site mx-auto">
       <FadeIn>
         <div className="max-w-3xl">
           {about.heroEyebrow && (

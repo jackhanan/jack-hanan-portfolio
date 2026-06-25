@@ -15,7 +15,7 @@ export default async function AboutPage() {
   }
 
   return (
-    <div className="pt-32 pb-24 px-6 lg:px-12 max-w-site mx-auto">
+    <div className="pt-24 md:pt-32 pb-16 md:pb-24 px-6 lg:px-12 max-w-site mx-auto">
       <FadeIn>
         <h1 className="font-serif text-headline font-light text-charcoal arch-rule pt-8 pb-12">
           About
@@ -29,7 +29,7 @@ export default async function AboutPage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
             {/* Photo */}
             <div className="lg:col-span-4">
-              <div className="relative aspect-[3/4] overflow-hidden bg-charcoal/8">
+              <div className="relative aspect-[3/4] overflow-hidden bg-charcoal/8 max-w-xs mx-auto lg:max-w-none lg:mx-0">
                 {about.photo && (
                   <Image src={about.photo} alt="Jack Hanan" fill className="object-cover" priority />
                 )}
@@ -100,7 +100,7 @@ export default async function AboutPage() {
                   {about.software?.length > 0 && (
                     <div>
                       <h2 className="font-serif text-xl font-light text-charcoal mb-5">Software</h2>
-                      <ul className="space-y-2 columns-2">
+                      <ul className="space-y-2">
                         {about.software.map((sw) => (
                           <li key={sw} className="text-sm text-mid font-sans">{sw}</li>
                         ))}

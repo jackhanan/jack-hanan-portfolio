@@ -28,7 +28,7 @@ export default function ContactForm({ email, linkedin }: Props) {
     'w-full border-b border-charcoal/20 bg-transparent py-3 text-sm text-charcoal font-sans placeholder-mid/60 focus:outline-none focus:border-accent transition-colors duration-200'
 
   return (
-    <div className="pt-32 pb-24 px-6 lg:px-12 max-w-site mx-auto">
+    <div className="pt-24 md:pt-32 pb-16 md:pb-24 px-6 lg:px-12 max-w-site mx-auto">
       <FadeIn>
         <h1 className="font-serif text-headline font-light text-charcoal arch-rule pt-8 pb-12">
           Contact

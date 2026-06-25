@@ -15,7 +15,7 @@ export default async function ProjectsPage() {
   }
 
   return (
-    <div className="pt-32 pb-24 px-6 lg:px-12 max-w-site mx-auto">
+    <div className="pt-24 md:pt-32 pb-16 md:pb-24 px-6 lg:px-12 max-w-site mx-auto">
       <FadeIn>
         <div className="flex items-baseline justify-between mb-12 arch-rule pt-8">
           <h1 className="font-serif text-headline font-light text-charcoal">Projects</h1>
