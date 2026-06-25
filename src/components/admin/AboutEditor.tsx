@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import ImageUploadZone from './ImageUploadZone'
+import PdfUploadZone from './PdfUploadZone'
 import type { AboutData, EducationEntry } from '@/types'
 
 interface Props {
@@ -144,6 +145,12 @@ export default function AboutEditor({ initial }: Props) {
           slug="profile"
           onUpload={(url) => update('photo', url)}
           label="Profile Photo"
+        />
+
+        {/* Resume PDF */}
+        <PdfUploadZone
+          currentUrl={data.resumeUrl ?? ''}
+          onUpload={(url) => update('resumeUrl', url)}
         />
 
         {/* Bio */}

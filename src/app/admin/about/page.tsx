@@ -5,6 +5,9 @@ import type { AboutData } from '@/types'
 export const dynamic = 'force-dynamic'
 
 const EMPTY: AboutData = {
+  heroEyebrow: '',
+  heroName: '',
+  heroTagline: '',
   bio: '',
   photo: '',
   skills: [],

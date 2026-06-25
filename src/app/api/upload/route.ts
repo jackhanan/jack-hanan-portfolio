@@ -11,12 +11,11 @@ function checkAuth() {
   return valid
 }
 
-// Upload to Cloudinary via unsigned upload preset — no SDK needed.
-// Set CLOUDINARY_CLOUD_NAME and CLOUDINARY_UPLOAD_PRESET in Railway Variables.
-// In Cloudinary dashboard: Settings → Upload → Upload presets → Add unsigned preset.
-async function uploadToCloudinary(file: File, folder: string): Promise<string> {
+// Images → /image/upload, PDFs/raw files → /raw/upload
+async function uploadToCloudinary(file: File, folder: string, isPdf: boolean): Promise<string> {
   const cloudName = process.env.CLOUDINARY_CLOUD_NAME!
   const uploadPreset = process.env.CLOUDINARY_UPLOAD_PRESET!
+  const resourceType = isPdf ? 'raw' : 'image'
 
   const fd = new FormData()
   fd.append('file', file)
@@ -24,7 +23,7 @@ async function uploadToCloudinary(file: File, folder: string): Promise<string> {
   fd.append('folder', `portfolio/${folder}`)
 
   const res = await fetch(
-    `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+    `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`,
     { method: 'POST', body: fd }
   )
 
@@ -39,7 +38,7 @@ async function uploadToCloudinary(file: File, folder: string): Promise<string> {
 
 // Local filesystem fallback — only works in local dev (Railway filesystem is ephemeral).
 async function uploadToFilesystem(file: File, slug: string): Promise<string> {
-  const ext = file.name.split('.').pop()?.toLowerCase() ?? 'jpg'
+  const ext = file.name.split('.').pop()?.toLowerCase() ?? 'bin'
   const filename = `${Date.now()}.${ext}`
   const uploadDir = path.join(process.cwd(), 'public', 'uploads', slug)
   await mkdir(uploadDir, { recursive: true })
@@ -68,25 +67,28 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'No file received' }, { status: 400 })
   }
 
-  // Validate it's an image
-  if (!file.type.startsWith('image/')) {
-    return NextResponse.json({ error: 'Only image files are allowed' }, { status: 400 })
+  const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')
+  const isImage = file.type.startsWith('image/')
+
+  if (!isImage && !isPdf) {
+    return NextResponse.json({ error: 'Only image or PDF files are allowed' }, { status: 400 })
   }
 
-  // Cap at 10 MB
-  if (file.size > 10 * 1024 * 1024) {
-    return NextResponse.json({ error: 'File too large (max 10 MB)' }, { status: 400 })
+  // Cap images at 10 MB, PDFs at 20 MB
+  const maxSize = isPdf ? 20 * 1024 * 1024 : 10 * 1024 * 1024
+  if (file.size > maxSize) {
+    return NextResponse.json({ error: `File too large (max ${isPdf ? '20' : '10'} MB)` }, { status: 400 })
   }
 
   const useCloudinary =
     !!process.env.CLOUDINARY_CLOUD_NAME && !!process.env.CLOUDINARY_UPLOAD_PRESET
 
-  console.log('[api/upload] slug:', slug, '| file:', file.name, '| size:', file.size)
+  console.log('[api/upload] slug:', slug, '| file:', file.name, '| size:', file.size, '| pdf:', isPdf)
   console.log('[api/upload] storage:', useCloudinary ? 'Cloudinary' : 'filesystem (local only)')
 
   try {
     const url = useCloudinary
-      ? await uploadToCloudinary(file, slug)
+      ? await uploadToCloudinary(file, slug, isPdf)
       : await uploadToFilesystem(file, slug)
 
     console.log('[api/upload] saved to:', url)

@@ -60,7 +60,7 @@ export default async function AboutPage() {
                     <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                       <path d="M8 1v9M4 7l4 4 4-4M2 14h12" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
-                    Download CV
+                    Download Resume
                   </a>
                 </div>
               )}
