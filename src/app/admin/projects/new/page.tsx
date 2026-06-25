@@ -9,6 +9,7 @@ const blank: Project = {
   description: '',
   heroImage: '',
   gallery: [],
+  drawings: [],
   featured: false,
   order: 999,
   visible: false,
