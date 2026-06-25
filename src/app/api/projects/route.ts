@@ -7,51 +7,86 @@ import type { Project } from '@/types'
 
 function checkAuth() {
   const token = cookies().get('admin-token')?.value
-  return isValidToken(token)
+  const valid = isValidToken(token)
+  if (!valid) console.log('[api/projects] Auth failed — token:', token ? 'present but wrong' : 'missing')
+  return valid
 }
 
 export async function GET() {
-  const projects = await readProjects()
-  return NextResponse.json(projects)
+  try {
+    const projects = await readProjects()
+    return NextResponse.json(projects)
+  } catch (err) {
+    console.error('[api/projects] GET error:', err)
+    return NextResponse.json({ error: String(err) }, { status: 500 })
+  }
 }
 
 export async function POST(request: Request) {
-  if (!checkAuth()) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-
-  const body = await request.json()
-  const projects = await readProjects()
-
-  const id = slugify(body.title || 'untitled')
-  const newProject: Project = {
-    id,
-    title: body.title ?? 'Untitled Project',
-    year: body.year ?? new Date().getFullYear(),
-    category: body.category ?? 'Academic',
-    description: body.description ?? '',
-    heroImage: body.heroImage ?? '',
-    gallery: body.gallery ?? [],
-    featured: body.featured ?? false,
-    order: projects.length,
-    visible: body.visible ?? false,
+  if (!checkAuth()) {
+    return NextResponse.json({ error: 'Unauthorized — check admin cookie' }, { status: 401 })
   }
 
-  projects.push(newProject)
-  await writeProjects(projects)
+  let body
+  try {
+    body = await request.json()
+  } catch (err) {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
+  }
 
-  revalidatePath('/projects')
-  revalidatePath('/')
+  try {
+    console.log('[api/projects] Creating project:', body.title)
+    console.log('[api/projects] UPSTASH_REDIS_REST_URL set:', !!process.env.UPSTASH_REDIS_REST_URL)
+    console.log('[api/projects] UPSTASH_REDIS_REST_TOKEN set:', !!process.env.UPSTASH_REDIS_REST_TOKEN)
 
-  return NextResponse.json(newProject, { status: 201 })
+    const projects = await readProjects()
+    const id = slugify(body.title || 'untitled')
+    const newProject: Project = {
+      id,
+      title: body.title ?? 'Untitled Project',
+      year: body.year ?? new Date().getFullYear(),
+      category: body.category ?? 'Academic',
+      description: body.description ?? '',
+      heroImage: body.heroImage ?? '',
+      gallery: body.gallery ?? [],
+      featured: body.featured ?? false,
+      order: projects.length,
+      visible: body.visible ?? false,
+    }
+
+    projects.push(newProject)
+    await writeProjects(projects)
+    revalidatePath('/projects')
+    revalidatePath('/')
+    console.log('[api/projects] Created:', id)
+    return NextResponse.json(newProject, { status: 201 })
+  } catch (err) {
+    console.error('[api/projects] POST error:', err)
+    return NextResponse.json({ error: String(err) }, { status: 500 })
+  }
 }
 
 export async function PUT(request: Request) {
-  if (!checkAuth()) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!checkAuth()) {
+    return NextResponse.json({ error: 'Unauthorized — check admin cookie' }, { status: 401 })
+  }
 
-  const body: Project[] = await request.json()
-  await writeProjects(body)
+  let body: Project[]
+  try {
+    body = await request.json()
+  } catch (err) {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
+  }
 
-  revalidatePath('/projects')
-  revalidatePath('/')
-
-  return NextResponse.json({ ok: true })
+  try {
+    console.log('[api/projects] Reordering', body.length, 'projects')
+    await writeProjects(body)
+    revalidatePath('/projects')
+    revalidatePath('/')
+    console.log('[api/projects] Reorder saved')
+    return NextResponse.json({ ok: true })
+  } catch (err) {
+    console.error('[api/projects] PUT error:', err)
+    return NextResponse.json({ error: String(err) }, { status: 500 })
+  }
 }

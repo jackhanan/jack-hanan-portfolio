@@ -6,21 +6,44 @@ import { revalidatePath } from 'next/cache'
 
 function checkAuth() {
   const token = cookies().get('admin-token')?.value
-  return isValidToken(token)
+  const valid = isValidToken(token)
+  if (!valid) console.log('[api/about] Auth failed — token:', token ? 'present but wrong' : 'missing')
+  return valid
 }
 
 export async function GET() {
-  const about = await readAbout()
-  return NextResponse.json(about)
+  try {
+    const about = await readAbout()
+    return NextResponse.json(about)
+  } catch (err) {
+    console.error('[api/about] GET error:', err)
+    return NextResponse.json({ error: String(err) }, { status: 500 })
+  }
 }
 
 export async function PUT(request: Request) {
-  if (!checkAuth()) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!checkAuth()) {
+    return NextResponse.json({ error: 'Unauthorized — check admin cookie' }, { status: 401 })
+  }
 
-  const body = await request.json()
-  await writeAbout(body)
+  let body
+  try {
+    body = await request.json()
+  } catch (err) {
+    console.error('[api/about] Failed to parse request body:', err)
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
+  }
 
-  revalidatePath('/about')
-
-  return NextResponse.json({ ok: true })
+  try {
+    console.log('[api/about] Writing about data...')
+    console.log('[api/about] UPSTASH_REDIS_REST_URL set:', !!process.env.UPSTASH_REDIS_REST_URL)
+    console.log('[api/about] UPSTASH_REDIS_REST_TOKEN set:', !!process.env.UPSTASH_REDIS_REST_TOKEN)
+    await writeAbout(body)
+    revalidatePath('/about')
+    console.log('[api/about] Write successful')
+    return NextResponse.json({ ok: true })
+  } catch (err) {
+    console.error('[api/about] Write error:', err)
+    return NextResponse.json({ error: String(err) }, { status: 500 })
+  }
 }

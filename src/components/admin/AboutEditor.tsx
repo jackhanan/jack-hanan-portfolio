@@ -13,11 +13,13 @@ export default function AboutEditor({ initial }: Props) {
   const [data, setData] = useState<AboutData>(initial)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const router = useRouter()
 
   function update<K extends keyof AboutData>(key: K, value: AboutData[K]) {
     setData((d) => ({ ...d, [key]: value }))
     setSaved(false)
+    setError(null)
   }
 
   function updateSkills(raw: string) {
@@ -43,21 +45,41 @@ export default function AboutEditor({ initial }: Props) {
 
   async function handleSave() {
     setSaving(true)
-    const res = await fetch('/api/about', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    })
-    if (res.ok) {
-      setSaved(true)
-      router.refresh()
+    setSaved(false)
+    setError(null)
+    try {
+      const res = await fetch('/api/about', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+      const json = await res.json()
+      if (res.ok) {
+        setSaved(true)
+        router.refresh()
+      } else {
+        setError(json.error ?? `Server error ${res.status}`)
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Network error — could not reach server')
+    } finally {
+      setSaving(false)
     }
-    setSaving(false)
   }
 
   const inputClass =
     'w-full bg-[#1A1A18] border border-[#2A2A28] text-[#E8E8E4] text-sm font-sans px-3 py-2.5 rounded focus:outline-none focus:border-[#6B7C9B] transition-colors duration-200 placeholder-[#555550]'
   const labelClass = 'block text-xs tracking-widest uppercase text-[#888882] font-sans mb-1.5'
+
+  const SaveButton = ({ label = 'Save' }: { label?: string }) => (
+    <button
+      onClick={handleSave}
+      disabled={saving}
+      className="text-xs tracking-widest uppercase font-sans text-[#111110] bg-[#E8E8E4] hover:bg-[#6B7C9B] hover:text-white px-5 py-2 rounded transition-colors duration-150 cursor-pointer disabled:opacity-50"
+    >
+      {saving ? 'Saving…' : label}
+    </button>
+  )
 
   return (
     <div className="p-8 max-w-3xl">
@@ -65,15 +87,17 @@ export default function AboutEditor({ initial }: Props) {
         <h1 className="text-lg text-[#E8E8E4] font-sans">About Page</h1>
         <div className="flex items-center gap-3">
           {saved && <span className="text-xs text-green-400 font-sans">Saved</span>}
-          <button
-            onClick={handleSave}
-            disabled={saving}
-            className="text-xs tracking-widest uppercase font-sans text-[#111110] bg-[#E8E8E4] hover:bg-[#6B7C9B] hover:text-white px-5 py-2 rounded transition-colors duration-150 cursor-pointer disabled:opacity-50"
-          >
-            {saving ? 'Saving…' : 'Save'}
-          </button>
+          {error && <span className="text-xs text-red-400 font-sans max-w-xs truncate" title={error}>{error}</span>}
+          <SaveButton />
         </div>
       </div>
+
+      {/* Full error banner — visible when error is long */}
+      {error && (
+        <div className="mb-6 px-4 py-3 bg-red-500/10 border border-red-500/30 rounded text-xs text-red-400 font-sans break-all">
+          <span className="font-medium">Save failed:</span> {error}
+        </div>
+      )}
 
       <div className="space-y-6">
         {/* Photo */}
@@ -192,15 +216,12 @@ export default function AboutEditor({ initial }: Props) {
 
         {/* Bottom save bar */}
         <div className="flex items-center justify-between pt-6 border-t border-[#2A2A28]">
-          {saved && <span className="text-xs text-green-400 font-sans">All changes saved</span>}
-          {!saved && <span className="text-xs text-[#555550] font-sans">Unsaved changes</span>}
-          <button
-            onClick={handleSave}
-            disabled={saving}
-            className="text-xs tracking-widest uppercase font-sans text-[#111110] bg-[#E8E8E4] hover:bg-[#6B7C9B] hover:text-white px-6 py-2.5 rounded transition-colors duration-150 cursor-pointer disabled:opacity-50"
-          >
-            {saving ? 'Saving…' : 'Save Changes'}
-          </button>
+          <div>
+            {saved && <span className="text-xs text-green-400 font-sans">All changes saved</span>}
+            {error && <span className="text-xs text-red-400 font-sans">{error}</span>}
+            {!saved && !error && <span className="text-xs text-[#555550] font-sans">Unsaved changes</span>}
+          </div>
+          <SaveButton label="Save Changes" />
         </div>
       </div>
     </div>

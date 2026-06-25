@@ -15,6 +15,7 @@ interface Props {
 export default function DashboardClient({ initial }: Props) {
   const [projects, setProjects] = useState<Project[]>(initial)
   const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const router = useRouter()
 
   async function handleDragEnd(result: DropResult) {
@@ -25,26 +26,50 @@ export default function DashboardClient({ initial }: Props) {
 
     const withOrder = reordered.map((p, i) => ({ ...p, order: i }))
     setProjects(withOrder)
+    setError(null)
 
     setSaving(true)
-    await fetch('/api/projects', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(withOrder),
-    })
-    router.refresh()
-    setSaving(false)
+    try {
+      const res = await fetch('/api/projects', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(withOrder),
+      })
+      if (!res.ok) {
+        const json = await res.json()
+        setError(json.error ?? `Reorder failed: ${res.status}`)
+      } else {
+        router.refresh()
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Network error')
+    } finally {
+      setSaving(false)
+    }
   }
 
   async function toggleVisibility(id: string, visible: boolean) {
     const updated = projects.map((p) => p.id === id ? { ...p, visible } : p)
     setProjects(updated)
-    await fetch(`/api/projects/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ visible }),
-    })
-    router.refresh()
+    setError(null)
+    try {
+      const res = await fetch(`/api/projects/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ visible }),
+      })
+      if (!res.ok) {
+        const json = await res.json()
+        setError(json.error ?? `Toggle failed: ${res.status}`)
+        // Revert optimistic update
+        setProjects(projects)
+      } else {
+        router.refresh()
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Network error')
+      setProjects(projects)
+    }
   }
 
   return (
@@ -53,6 +78,7 @@ export default function DashboardClient({ initial }: Props) {
         <h1 className="text-lg text-[#E8E8E4] font-sans">Projects</h1>
         <div className="flex items-center gap-4">
           {saving && <span className="text-xs text-[#888882] font-sans">Saving order…</span>}
+          {error && <span className="text-xs text-red-400 font-sans max-w-xs truncate" title={error}>{error}</span>}
           <Link
             href="/admin/projects/new"
             className="text-xs tracking-widest uppercase font-sans text-[#111110] bg-[#E8E8E4] hover:bg-[#6B7C9B] hover:text-white px-5 py-2 rounded transition-colors duration-150"

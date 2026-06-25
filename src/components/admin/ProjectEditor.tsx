@@ -19,40 +19,63 @@ export default function ProjectEditor({ initial, isNew = false }: Props) {
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const router = useRouter()
 
   function update<K extends keyof Project>(key: K, value: Project[K]) {
     setProject((p) => ({ ...p, [key]: value }))
     setSaved(false)
+    setError(null)
   }
 
   async function handleSave() {
     setSaving(true)
-    const method = isNew ? 'POST' : 'PUT'
-    const url = isNew ? '/api/projects' : `/api/projects/${initial.id}`
+    setSaved(false)
+    setError(null)
+    try {
+      const method = isNew ? 'POST' : 'PUT'
+      const url = isNew ? '/api/projects' : `/api/projects/${initial.id}`
 
-    const res = await fetch(url, {
-      method,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(project),
-    })
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(project),
+      })
+      const json = await res.json()
 
-    if (res.ok) {
-      setSaved(true)
-      router.refresh()
-      if (isNew) {
-        const created = await res.json()
-        router.push(`/admin/projects/${created.id}`)
+      if (res.ok) {
+        setSaved(true)
+        router.refresh()
+        if (isNew) {
+          router.push(`/admin/projects/${json.id}`)
+        }
+      } else {
+        setError(json.error ?? `Server error ${res.status}`)
       }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Network error — could not reach server')
+    } finally {
+      setSaving(false)
     }
-    setSaving(false)
   }
 
   async function handleDelete() {
     if (!confirm(`Delete "${project.title}"? This cannot be undone.`)) return
     setDeleting(true)
-    await fetch(`/api/projects/${initial.id}`, { method: 'DELETE' })
-    router.push('/admin/dashboard')
+    setError(null)
+    try {
+      const res = await fetch(`/api/projects/${initial.id}`, { method: 'DELETE' })
+      if (res.ok) {
+        router.push('/admin/dashboard')
+      } else {
+        const json = await res.json()
+        setError(json.error ?? `Delete failed: ${res.status}`)
+        setDeleting(false)
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Network error')
+      setDeleting(false)
+    }
   }
 
   const inputClass =
@@ -61,7 +84,7 @@ export default function ProjectEditor({ initial, isNew = false }: Props) {
 
   return (
     <div className="p-8 max-w-3xl">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-4">
         <h1 className="text-lg text-[#E8E8E4] font-sans">
           {isNew ? 'New Project' : project.title || 'Edit Project'}
         </h1>
@@ -85,6 +108,13 @@ export default function ProjectEditor({ initial, isNew = false }: Props) {
           </button>
         </div>
       </div>
+
+      {/* Error banner */}
+      {error && (
+        <div className="mb-6 px-4 py-3 bg-red-500/10 border border-red-500/30 rounded text-xs text-red-400 font-sans break-all">
+          <span className="font-medium">Error:</span> {error}
+        </div>
+      )}
 
       <div className="space-y-6">
         {/* Title */}
