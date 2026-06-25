@@ -13,6 +13,7 @@ const EMPTY_ABOUT: AboutData = {
   skills: [],
   software: [],
   education: [],
+  basedIn: '',
   email: '',
   linkedin: '',
   resumeUrl: '/resume.pdf',
@@ -25,6 +26,7 @@ function normalise(d: AboutData): AboutData {
     heroEyebrow: d.heroEyebrow ?? 'Architecture Student / Designer',
     heroName: d.heroName ?? 'Jack Hanan',
     heroTagline: d.heroTagline ?? '',
+    basedIn: d.basedIn ?? '',
     resumeUrl: d.resumeUrl ?? '',
   }
 }

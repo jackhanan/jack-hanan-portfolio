@@ -13,6 +13,7 @@ const EMPTY: AboutData = {
   skills: [],
   software: [],
   education: [],
+  basedIn: '',
   email: '',
   linkedin: '',
   resumeUrl: '/resume.pdf',

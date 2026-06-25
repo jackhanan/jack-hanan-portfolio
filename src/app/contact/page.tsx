@@ -8,11 +8,13 @@ export const dynamic = 'force-dynamic'
 export default async function ContactPage() {
   let email = ''
   let linkedin = ''
+  let basedIn = ''
   try {
     const about = await readAbout()
     email = about.email ?? ''
     linkedin = about.linkedin ?? ''
+    basedIn = about.basedIn ?? ''
   } catch {}
 
-  return <ContactForm email={email} linkedin={linkedin} />
+  return <ContactForm email={email} linkedin={linkedin} basedIn={basedIn} />
 }

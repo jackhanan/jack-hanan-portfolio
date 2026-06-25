@@ -6,9 +6,10 @@ import FadeIn from '@/components/ui/FadeIn'
 interface Props {
   email: string
   linkedin: string
+  basedIn: string
 }
 
-export default function ContactForm({ email, linkedin }: Props) {
+export default function ContactForm({ email, linkedin, basedIn }: Props) {
   const [form, setForm] = useState({ name: '', email: '', message: '' })
   const [sent, setSent] = useState(false)
 
@@ -142,10 +143,12 @@ export default function ContactForm({ email, linkedin }: Props) {
               </div>
             )}
 
-            <div>
-              <p className="text-xs tracking-widest uppercase text-mid font-sans mb-2">Based in</p>
-              <p className="text-sm text-charcoal font-sans">Melbourne, Australia</p>
-            </div>
+            {basedIn && (
+              <div>
+                <p className="text-xs tracking-widest uppercase text-mid font-sans mb-2">Based in</p>
+                <p className="text-sm text-charcoal font-sans">{basedIn}</p>
+              </div>
+            )}
           </div>
         </div>
       </FadeIn>

@@ -27,6 +27,7 @@ export interface AboutData {
   skills: string[]
   software: string[]
   education: EducationEntry[]
+  basedIn: string
   email: string
   linkedin: string
   resumeUrl: string

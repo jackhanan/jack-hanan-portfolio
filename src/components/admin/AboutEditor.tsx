@@ -166,7 +166,7 @@ export default function AboutEditor({ initial }: Props) {
           />
         </div>
 
-        {/* Email + LinkedIn */}
+        {/* Email + LinkedIn + Based In */}
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label htmlFor="email" className={labelClass}>Email</label>
@@ -188,6 +188,17 @@ export default function AboutEditor({ initial }: Props) {
               className={inputClass}
             />
           </div>
+        </div>
+        <div>
+          <label htmlFor="basedIn" className={labelClass}>Based In</label>
+          <input
+            id="basedIn"
+            type="text"
+            value={data.basedIn ?? ''}
+            onChange={(e) => update('basedIn', e.target.value)}
+            placeholder="e.g. Melbourne, Australia"
+            className={inputClass}
+          />
         </div>
 
         {/* Skills */}
