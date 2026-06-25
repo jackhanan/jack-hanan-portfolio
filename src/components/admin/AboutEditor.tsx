@@ -147,10 +147,10 @@ export default function AboutEditor({ initial }: Props) {
           label="Profile Photo"
         />
 
-        {/* Resume PDF */}
+        {/* Resume PDF — stored in Redis separately, served via /api/resume */}
         <PdfUploadZone
-          currentUrl={data.resumeUrl ?? ''}
-          onUpload={(url) => update('resumeUrl', url)}
+          hasResume={!!initial.resumeUrl || initial.resumeUrl === '/api/resume'}
+          onUploaded={() => update('resumeUrl', '/api/resume')}
         />
 
         {/* Bio */}

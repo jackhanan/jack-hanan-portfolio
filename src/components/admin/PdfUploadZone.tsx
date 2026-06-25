@@ -3,12 +3,13 @@
 import { useState, useRef } from 'react'
 
 interface Props {
-  currentUrl: string
-  onUpload: (url: string) => void
+  hasResume: boolean
+  onUploaded: () => void
 }
 
-export default function PdfUploadZone({ currentUrl, onUpload }: Props) {
+export default function PdfUploadZone({ hasResume, onUploaded }: Props) {
   const [uploading, setUploading] = useState(false)
+  const [done, setDone] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -17,18 +18,40 @@ export default function PdfUploadZone({ currentUrl, onUpload }: Props) {
       setError('Please select a PDF file')
       return
     }
+    if (file.size > 5 * 1024 * 1024) {
+      setError('PDF must be under 5 MB')
+      return
+    }
+
     setUploading(true)
+    setDone(false)
     setError(null)
+
     try {
-      const fd = new FormData()
-      fd.append('file', file)
-      fd.append('slug', 'resume')
-      const res = await fetch('/api/upload', { method: 'POST', body: fd })
+      // Convert to base64 client-side
+      const base64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = () => {
+          const result = reader.result as string
+          // Strip the data:application/pdf;base64, prefix
+          resolve(result.split(',')[1])
+        }
+        reader.onerror = () => reject(new Error('Failed to read file'))
+        reader.readAsDataURL(file)
+      })
+
+      const res = await fetch('/api/resume', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ base64 }),
+      })
+
       const data = await res.json()
       if (!res.ok) {
         setError(data.error ?? `Upload failed (${res.status})`)
       } else {
-        onUpload(data.url)
+        setDone(true)
+        onUploaded()
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Network error')
@@ -37,30 +60,25 @@ export default function PdfUploadZone({ currentUrl, onUpload }: Props) {
     }
   }
 
-  const filename = currentUrl
-    ? decodeURIComponent(currentUrl.split('/').pop() ?? currentUrl).replace(/\?.*$/, '')
-    : null
-
   return (
     <div>
       <p className="text-xs tracking-widest uppercase text-[#888882] font-sans mb-2">Resume PDF</p>
 
-      {currentUrl && (
+      {(hasResume || done) && (
         <div className="flex items-center gap-3 mb-3 px-3 py-2.5 bg-[#1A1A18] border border-[#2A2A28] rounded">
           <svg className="w-4 h-4 text-[#6B7C9B] shrink-0" viewBox="0 0 16 16" fill="none" aria-hidden="true">
             <path d="M9 1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V5L9 1z" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M9 1v4h4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
           <a
-            href={currentUrl}
+            href="/api/resume"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs text-[#6B7C9B] hover:text-[#8A9BB8] font-sans truncate transition-colors"
-            title={currentUrl}
+            className="text-xs text-[#6B7C9B] hover:text-[#8A9BB8] font-sans transition-colors"
           >
-            {filename ?? 'Current resume'}
+            {done ? 'New resume uploaded — preview' : 'Current resume — preview'}
           </a>
-          <span className="text-xs text-[#555550] font-sans ml-auto shrink-0">Current</span>
+          {done && <span className="text-xs text-green-400 font-sans ml-auto shrink-0">Saved</span>}
         </div>
       )}
 
@@ -79,9 +97,9 @@ export default function PdfUploadZone({ currentUrl, onUpload }: Props) {
         ) : (
           <div className="space-y-1">
             <p className="text-sm text-[#555550] font-sans">
-              {currentUrl ? 'Drag a new PDF to replace, or click to browse' : 'Drag PDF here or click to upload'}
+              {hasResume || done ? 'Drag a new PDF to replace, or click to browse' : 'Drag PDF here or click to upload'}
             </p>
-            <p className="text-xs text-[#444440] font-sans">PDF only · max 20 MB</p>
+            <p className="text-xs text-[#444440] font-sans">PDF only · max 5 MB</p>
           </div>
         )}
       </div>

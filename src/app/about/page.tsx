@@ -6,13 +6,6 @@ import FadeIn from '@/components/ui/FadeIn'
 export const metadata: Metadata = { title: 'About' }
 export const dynamic = 'force-dynamic'
 
-function resumeDownloadUrl(url: string): string {
-  // Inject fl_attachment into a Cloudinary raw URL so the browser downloads
-  // the file instead of trying to render it inline.
-  // e.g. /raw/upload/v123/... → /raw/upload/fl_attachment/v123/...
-  return url.replace('/raw/upload/', '/raw/upload/fl_attachment/')
-}
-
 export default async function AboutPage() {
   let about
   try {
@@ -56,11 +49,11 @@ export default async function AboutPage() {
                 </div>
               )}
 
-              {/* Resume download */}
+              {/* Resume download — shown once a PDF has been uploaded via admin */}
               {about.resumeUrl && (
                 <div>
                   <a
-                    href={resumeDownloadUrl(about.resumeUrl)}
+                    href="/api/resume"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 text-sm text-charcoal border border-charcoal/20 px-5 py-2.5 hover:border-accent hover:text-accent transition-colors duration-200 font-sans tracking-wide"
