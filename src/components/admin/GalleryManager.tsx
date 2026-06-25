@@ -11,30 +11,52 @@ interface Props {
 
 export default function GalleryManager({ images, slug, onChange }: Props) {
   const [uploading, setUploading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [dragOverIdx, setDragOverIdx] = useState<number | null>(null)
+  const [urlInput, setUrlInput] = useState('')
+  const [showUrlInput, setShowUrlInput] = useState(false)
   const dragIdx = useRef<number | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
   async function uploadFiles(files: FileList) {
     setUploading(true)
+    setError(null)
     const uploaded: string[] = []
-    for (const file of Array.from(files)) {
-      const fd = new FormData()
-      fd.append('file', file)
-      fd.append('slug', slug)
-      const res = await fetch('/api/upload', { method: 'POST', body: fd })
-      const data = await res.json()
-      uploaded.push(data.url)
+    try {
+      for (const file of Array.from(files)) {
+        const fd = new FormData()
+        fd.append('file', file)
+        fd.append('slug', slug)
+        const res = await fetch('/api/upload', { method: 'POST', body: fd })
+        const data = await res.json()
+        if (!res.ok) {
+          setError(data.error ?? `Upload failed (${res.status})`)
+          break
+        }
+        uploaded.push(data.url)
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Network error during upload')
+    } finally {
+      setUploading(false)
     }
-    onChange([...images, ...uploaded])
-    setUploading(false)
+    if (uploaded.length > 0) {
+      onChange([...images, ...uploaded])
+    }
+  }
+
+  function addUrl() {
+    const trimmed = urlInput.trim()
+    if (!trimmed) return
+    onChange([...images, trimmed])
+    setUrlInput('')
+    setError(null)
   }
 
   function removeImage(idx: number) {
     onChange(images.filter((_, i) => i !== idx))
   }
 
-  // Drag-to-reorder thumbnails
   function handleDragStart(idx: number) {
     dragIdx.current = idx
   }
@@ -55,7 +77,16 @@ export default function GalleryManager({ images, slug, onChange }: Props) {
 
   return (
     <div>
-      <p className="text-xs tracking-widest uppercase text-[#888882] font-sans mb-3">Gallery</p>
+      <div className="flex items-center justify-between mb-3">
+        <p className="text-xs tracking-widest uppercase text-[#888882] font-sans">Gallery</p>
+        <button
+          type="button"
+          onClick={() => { setShowUrlInput((v) => !v); setError(null) }}
+          className="text-xs text-[#6B7C9B] hover:text-[#8A9BB8] font-sans transition-colors cursor-pointer"
+        >
+          {showUrlInput ? 'Upload files instead' : 'Add by URL instead'}
+        </button>
+      </div>
 
       {/* Thumbnails */}
       {images.length > 0 && (
@@ -72,7 +103,7 @@ export default function GalleryManager({ images, slug, onChange }: Props) {
                 dragOverIdx === i ? 'ring-2 ring-[#6B7C9B]' : ''
               }`}
             >
-              <Image src={src} alt={`Gallery image ${i + 1}`} fill className="object-cover" />
+              <Image src={src} alt={`Gallery image ${i + 1}`} fill className="object-cover" unoptimized />
               <button
                 onClick={() => removeImage(i)}
                 className="absolute top-1 right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-150 cursor-pointer"
@@ -90,24 +121,49 @@ export default function GalleryManager({ images, slug, onChange }: Props) {
         </div>
       )}
 
-      {/* Drop zone for new images */}
-      <div
-        onClick={() => inputRef.current?.click()}
-        onDragOver={(e) => e.preventDefault()}
-        onDrop={(e) => {
-          e.preventDefault()
-          uploadFiles(e.dataTransfer.files)
-        }}
-        className="border border-dashed border-[#333330] hover:border-[#555550] rounded p-6 text-center cursor-pointer transition-colors duration-200"
-      >
-        {uploading ? (
-          <p className="text-sm text-[#888882] font-sans">Uploading…</p>
-        ) : (
-          <p className="text-sm text-[#555550] font-sans">
-            Drag images here or click to add to gallery
-          </p>
-        )}
-      </div>
+      {/* URL input mode */}
+      {showUrlInput ? (
+        <div className="flex gap-2">
+          <input
+            type="url"
+            value={urlInput}
+            onChange={(e) => setUrlInput(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && addUrl()}
+            placeholder="https://res.cloudinary.com/… or any image URL"
+            className="flex-1 bg-[#1A1A18] border border-[#2A2A28] text-[#E8E8E4] text-sm font-sans px-3 py-2.5 rounded focus:outline-none focus:border-[#6B7C9B] transition-colors duration-200 placeholder-[#555550]"
+          />
+          <button
+            type="button"
+            onClick={addUrl}
+            className="text-xs tracking-widest uppercase font-sans text-[#111110] bg-[#E8E8E4] hover:bg-[#6B7C9B] hover:text-white px-4 py-2.5 rounded transition-colors duration-150 cursor-pointer whitespace-nowrap"
+          >
+            Add
+          </button>
+        </div>
+      ) : (
+        /* File drop zone */
+        <div
+          onClick={() => inputRef.current?.click()}
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={(e) => {
+            e.preventDefault()
+            uploadFiles(e.dataTransfer.files)
+          }}
+          className="border border-dashed border-[#333330] hover:border-[#555550] rounded p-6 text-center cursor-pointer transition-colors duration-200"
+        >
+          {uploading ? (
+            <p className="text-sm text-[#888882] font-sans">Uploading…</p>
+          ) : (
+            <p className="text-sm text-[#555550] font-sans">
+              Drag images here or click to add to gallery
+            </p>
+          )}
+        </div>
+      )}
+
+      {error && (
+        <p className="mt-2 text-xs text-red-400 font-sans break-all">{error}</p>
+      )}
 
       <input
         ref={inputRef}
