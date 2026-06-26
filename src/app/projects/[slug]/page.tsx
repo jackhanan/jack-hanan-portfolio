@@ -67,14 +67,12 @@ export default async function ProjectPage({ params }: { params: { slug: string }
       <FadeIn delay={150}>
         <div className="max-w-site mx-auto px-6 lg:px-12 mt-8 md:mt-12">
           <div className="arch-rule pt-10">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16">
-              <div className="lg:col-start-1 lg:col-span-7 space-y-5">
-                {paragraphs.map((para, i) => (
-                  <p key={i} className="text-base lg:text-lg text-charcoal/80 font-sans font-light leading-[1.75]">
-                    {para}
-                  </p>
-                ))}
-              </div>
+            <div className="space-y-5">
+              {paragraphs.map((para, i) => (
+                <p key={i} className="text-base lg:text-lg text-charcoal/80 font-sans font-light leading-[1.75]">
+                  {para}
+                </p>
+              ))}
             </div>
           </div>
         </div>
