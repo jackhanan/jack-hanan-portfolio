@@ -27,12 +27,13 @@ export default async function ProjectPage({ params }: { params: { slug: string }
     <article className="pt-16 md:pt-24">
       {/* Full-bleed hero */}
       {project.heroImage && (
-        <div className="relative w-full h-[60vh] md:h-[75vh] overflow-hidden bg-charcoal/10">
+        <div className="w-full bg-charcoal/10">
           <Image
             src={project.heroImage}
             alt={project.title}
-            fill
-            className="object-cover hero-ken-burns"
+            width={2400}
+            height={1600}
+            className="w-full h-auto block hero-ken-burns"
             priority
           />
         </div>
