@@ -100,7 +100,7 @@ export default async function ProjectPage({ params }: { params: { slug: string }
                     src={src}
                     alt={`${project.title} — drawing ${i + 1}`}
                     className="w-full h-auto block"
-                    loading="lazy"
+                    loading="eager"
                   />
                 </figure>
               ))}
