@@ -8,9 +8,11 @@ interface Props {
   className?: string
   /** How far to drift upward from (px). Defaults to 20. */
   drift?: number
+  /** IntersectionObserver rootMargin. Defaults to '0px'. */
+  rootMargin?: string
 }
 
-export default function FadeIn({ children, delay = 0, className = '', drift = 20 }: Props) {
+export default function FadeIn({ children, delay = 0, className = '', drift = 20, rootMargin = '0px' }: Props) {
   const ref = useRef<HTMLDivElement>(null)
   const [visible, setVisible] = useState(false)
 
@@ -23,7 +25,7 @@ export default function FadeIn({ children, delay = 0, className = '', drift = 20
             observer.disconnect()
           }
         },
-        { threshold: 0.08 }
+        { threshold: 0, rootMargin }
       )
       if (ref.current) observer.observe(ref.current)
       return () => observer.disconnect()

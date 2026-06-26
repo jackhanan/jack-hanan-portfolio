@@ -87,7 +87,7 @@ export default async function ProjectPage({ params }: { params: { slug: string }
 
       {/* Drawings — full-width, uncropped, one per row */}
       {project.drawings && project.drawings.length > 0 && (
-        <FadeIn delay={250}>
+        <FadeIn delay={250} rootMargin="0px 0px 500px 0px">
           <div className="max-w-site mx-auto px-6 lg:px-12 mt-20">
             <div className="arch-rule pt-8 mb-12">
               <h2 className="font-sans text-xs tracking-widest uppercase text-mid">Drawings</h2>
