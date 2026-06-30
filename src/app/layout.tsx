@@ -6,10 +6,20 @@ import PageTransition from '@/components/ui/PageTransition'
 
 export const metadata: Metadata = {
   title: {
-    default: 'Jack Hanan — Architecture',
+    default: 'Jack Hanan — Portfolio',
     template: '%s — Jack Hanan',
   },
   description: 'Architecture student and designer. Portfolio of academic, research, and professional work.',
+  openGraph: {
+    title: 'Jack Hanan — Portfolio',
+    description: 'Architecture student and designer. Portfolio of academic, research, and professional work.',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Jack Hanan — Portfolio',
+    description: 'Architecture student and designer. Portfolio of academic, research, and professional work.',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
