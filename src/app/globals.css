@@ -103,17 +103,6 @@
   width: 100%;
 }
 
-/* ─── Custom cursor: hide default on fine-pointer devices ─── */
-@media (pointer: fine) {
-  *, *::before, *::after {
-    cursor: none !important;
-  }
-  /* Restore pointer for interactive elements so they don't confuse screenreaders */
-  a, button, [role="button"], input, textarea, select, label {
-    cursor: none !important;
-  }
-}
-
 /* ─── Reduced motion: disable everything ─── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

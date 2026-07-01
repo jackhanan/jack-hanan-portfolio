@@ -3,7 +3,6 @@ import './globals.css'
 import Nav from '@/components/layout/Nav'
 import Footer from '@/components/layout/Footer'
 import PageTransition from '@/components/ui/PageTransition'
-import CustomCursor from '@/components/ui/CustomCursor'
 import BackToTop from '@/components/ui/BackToTop'
 
 export const metadata: Metadata = {
@@ -31,7 +30,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body>
-        <CustomCursor />
         <Nav />
         <PageTransition>
           <main>{children}</main>
