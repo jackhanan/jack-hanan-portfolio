@@ -9,30 +9,31 @@ export default function CustomCursor() {
     const dot = dotRef.current
     if (!dot) return
 
-    let x = -100, y = -100
-    let raf: number
+    let entered = false
 
     function move(e: MouseEvent) {
-      x = e.clientX
-      y = e.clientY
-    }
-    function hide() {
-      x = -100; y = -100
+      // First move after re-entry: snap position with no opacity transition,
+      // then immediately reveal. Achieved by disabling transition on position
+      // entirely — only opacity ever transitions.
+      dot!.style.left = e.clientX - 4 + 'px'
+      dot!.style.top  = e.clientY - 4 + 'px'
+      if (!entered) {
+        entered = true
+        dot!.style.opacity = '1'
+      }
     }
 
-    function tick() {
-      if (dot) dot.style.transform = `translate(${x}px, ${y}px)`
-      raf = requestAnimationFrame(tick)
+    function leave() {
+      entered = false
+      dot!.style.opacity = '0'
     }
 
     document.addEventListener('mousemove', move)
-    document.addEventListener('mouseleave', hide)
-    raf = requestAnimationFrame(tick)
+    document.addEventListener('mouseleave', leave)
 
     return () => {
       document.removeEventListener('mousemove', move)
-      document.removeEventListener('mouseleave', hide)
-      cancelAnimationFrame(raf)
+      document.removeEventListener('mouseleave', leave)
     }
   }, [])
 
@@ -47,14 +48,13 @@ export default function CustomCursor() {
         width: 8,
         height: 8,
         borderRadius: '50%',
-        backgroundColor: '#1C1C1A',
+        backgroundColor: '#fff',
+        mixBlendMode: 'difference',
         pointerEvents: 'none',
         zIndex: 99999,
-        transform: 'translate(-100px, -100px)',
-        marginLeft: -4,
-        marginTop: -4,
-        transition: 'transform 80ms linear',
-        // Only shown on devices with a fine pointer (mouse)
+        opacity: 0,
+        // Only opacity transitions — position is always instant
+        transition: 'opacity 150ms ease',
       }}
     />
   )

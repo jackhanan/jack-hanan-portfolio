@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import type { Project } from '@/types'
 
@@ -7,38 +6,37 @@ interface Props {
   next: Project | null
 }
 
-function NavCard({ project, label }: { project: Project; label: string }) {
-  return (
-    <Link href={`/projects/${project.id}`} className="group flex flex-col gap-3">
-      <p className="text-xs tracking-widest uppercase text-mid font-sans">{label}</p>
-      {project.heroImage && (
-        <div className="relative overflow-hidden bg-charcoal/5 aspect-[4/3]">
-          <Image
-            src={project.heroImage}
-            alt={project.title}
-            fill
-            className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-          />
-        </div>
-      )}
-      <p className="font-serif text-lg font-light text-charcoal group-hover:text-accent transition-colors duration-200">
-        {project.title}
-      </p>
-    </Link>
-  )
-}
-
 export default function ProjectNav({ prev, next }: Props) {
   if (!prev && !next) return null
 
   return (
-    <div className="max-w-site mx-auto px-6 lg:px-12 mt-20 mb-16">
-      <div className="arch-rule pt-10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-          <div>{prev && <NavCard project={prev} label="Previous" />}</div>
-          <div className="sm:text-right flex flex-col items-start sm:items-end">
-            {next && <NavCard project={next} label="Next" />}
-          </div>
+    <div className="max-w-site mx-auto px-6 lg:px-12 mt-16 mb-16">
+      <div className="arch-rule pt-10 flex items-center justify-between">
+        <div>
+          {prev && (
+            <Link
+              href={`/projects/${prev.id}`}
+              className="group inline-flex items-center gap-3 text-mid hover:text-charcoal transition-colors duration-200"
+            >
+              <svg width="16" height="28" viewBox="0 0 16 28" fill="none" aria-hidden="true">
+                <path d="M12 4L3 14l9 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <span className="font-serif text-lg font-light">{prev.title}</span>
+            </Link>
+          )}
+        </div>
+        <div>
+          {next && (
+            <Link
+              href={`/projects/${next.id}`}
+              className="group inline-flex items-center gap-3 text-mid hover:text-charcoal transition-colors duration-200"
+            >
+              <span className="font-serif text-lg font-light">{next.title}</span>
+              <svg width="16" height="28" viewBox="0 0 16 28" fill="none" aria-hidden="true">
+                <path d="M4 4l9 10-9 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </Link>
+          )}
         </div>
       </div>
     </div>
