@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
-import Link from 'next/link'
 import { getProject, getVisibleProjects } from '@/lib/projects'
 import ProjectGallery from '@/components/projects/ProjectGallery'
 import ProjectDrawings from '@/components/projects/ProjectDrawings'
@@ -104,19 +103,6 @@ export default async function ProjectPage({ params }: { params: { slug: string }
           </div>
         </FadeIn>
       )}
-
-      {/* Back link */}
-      <div className="max-w-site mx-auto px-6 lg:px-12 mt-20 mb-2">
-        <Link
-          href="/projects"
-          className="text-xs tracking-widest uppercase text-mid hover:text-charcoal transition-colors duration-200 font-sans inline-flex items-center gap-2"
-        >
-          <svg className="w-3 h-3" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-            <path d="M8 2L4 6l4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          All Projects
-        </Link>
-      </div>
 
       {/* Prev / Next navigation */}
       <ProjectNav prev={prevProject} next={nextProject} />

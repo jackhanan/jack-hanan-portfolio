@@ -53,7 +53,7 @@ export default function BackToTop() {
         padding: '0.5rem',
         opacity: visible ? 1 : 0,
         pointerEvents: visible ? 'auto' : 'none',
-        transition: 'opacity 300ms ease, bottom 150ms ease',
+        transition: 'opacity 300ms ease, bottom 80ms linear',
         color: '#6B6B66',
         display: 'flex',
         flexDirection: 'column',
