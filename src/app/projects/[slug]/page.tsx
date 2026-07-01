@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { getProject } from '@/lib/projects'
 import ProjectGallery from '@/components/projects/ProjectGallery'
+import ProjectDrawings from '@/components/projects/ProjectDrawings'
 import FadeIn from '@/components/ui/FadeIn'
 
 // All project pages are rendered on-demand at request time.
@@ -93,19 +94,7 @@ export default async function ProjectPage({ params }: { params: { slug: string }
             <div className="arch-rule pt-8 mb-12">
               <h2 className="font-sans text-xs tracking-widest uppercase text-mid">Drawings</h2>
             </div>
-            <div className="space-y-16">
-              {project.drawings.map((src, i) => (
-                <figure key={src + i} className="w-full">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={src}
-                    alt={`${project.title} — drawing ${i + 1}`}
-                    className="w-full h-auto block"
-                    loading="eager"
-                  />
-                </figure>
-              ))}
-            </div>
+            <ProjectDrawings drawings={project.drawings} projectTitle={project.title} />
           </div>
         </FadeIn>
       )}
