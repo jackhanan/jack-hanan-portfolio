@@ -3,7 +3,6 @@ import './globals.css'
 import Nav from '@/components/layout/Nav'
 import Footer from '@/components/layout/Footer'
 import PageTransition from '@/components/ui/PageTransition'
-import BackToTop from '@/components/ui/BackToTop'
 
 export const metadata: Metadata = {
   title: {
@@ -35,7 +34,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <main>{children}</main>
         </PageTransition>
         <Footer />
-        <BackToTop />
       </body>
     </html>
   )

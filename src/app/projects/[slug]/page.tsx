@@ -6,6 +6,7 @@ import ProjectGallery from '@/components/projects/ProjectGallery'
 import ProjectDrawings from '@/components/projects/ProjectDrawings'
 import ProjectNav from '@/components/projects/ProjectNav'
 import FadeIn from '@/components/ui/FadeIn'
+import BackToTop from '@/components/ui/BackToTop'
 
 // All project pages are rendered on-demand at request time.
 // This means new projects added via the admin appear immediately
@@ -106,6 +107,7 @@ export default async function ProjectPage({ params }: { params: { slug: string }
 
       {/* Prev / Next navigation */}
       <ProjectNav prev={prevProject} next={nextProject} />
+      <BackToTop />
     </article>
   )
 }
