@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react'
 import Image from 'next/image'
+import { uploadFile } from '@/lib/uploadHelpers'
 
 interface Props {
   images: string[]
@@ -24,25 +25,15 @@ export default function GalleryManager({ images, slug, onChange }: Props) {
     const uploaded: string[] = []
     try {
       for (const file of Array.from(files)) {
-        const fd = new FormData()
-        fd.append('file', file)
-        fd.append('slug', slug)
-        const res = await fetch('/api/upload', { method: 'POST', body: fd })
-        const data = await res.json()
-        if (!res.ok) {
-          setError(data.error ?? `Upload failed (${res.status})`)
-          break
-        }
-        uploaded.push(data.url)
+        const url = await uploadFile(file, slug)
+        uploaded.push(url)
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Network error during upload')
+      setError(err instanceof Error ? err.message : 'Upload failed')
     } finally {
       setUploading(false)
     }
-    if (uploaded.length > 0) {
-      onChange([...images, ...uploaded])
-    }
+    if (uploaded.length > 0) onChange([...images, ...uploaded])
   }
 
   function addUrl() {

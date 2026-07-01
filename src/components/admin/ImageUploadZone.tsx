@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react'
 import Image from 'next/image'
+import { uploadFile } from '@/lib/uploadHelpers'
 
 interface Props {
   currentImage: string
@@ -18,24 +19,14 @@ export default function ImageUploadZone({ currentImage, slug, onUpload, label = 
   const [showUrlInput, setShowUrlInput] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  async function uploadFile(file: File) {
+  async function handleUpload(file: File) {
     setUploading(true)
     setError(null)
     try {
-      const fd = new FormData()
-      fd.append('file', file)
-      fd.append('slug', slug)
-
-      const res = await fetch('/api/upload', { method: 'POST', body: fd })
-      const data = await res.json()
-
-      if (!res.ok) {
-        setError(data.error ?? `Upload failed (${res.status})`)
-      } else {
-        onUpload(data.url)
-      }
+      const url = await uploadFile(file, slug)
+      onUpload(url)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Network error during upload')
+      setError(err instanceof Error ? err.message : 'Upload failed')
     } finally {
       setUploading(false)
     }
@@ -45,12 +36,12 @@ export default function ImageUploadZone({ currentImage, slug, onUpload, label = 
     e.preventDefault()
     setDragging(false)
     const file = e.dataTransfer.files[0]
-    if (file) uploadFile(file)
+    if (file) handleUpload(file)
   }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
-    if (file) uploadFile(file)
+    if (file) handleUpload(file)
     // Reset so the same file can be re-selected if needed
     e.target.value = ''
   }

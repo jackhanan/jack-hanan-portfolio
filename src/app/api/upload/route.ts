@@ -27,9 +27,12 @@ async function uploadToCloudinary(file: File, folder: string, isPdf: boolean): P
     { method: 'POST', body: fd }
   )
 
+  const contentType = res.headers.get('content-type') ?? ''
   if (!res.ok) {
-    const text = await res.text()
-    throw new Error(`Cloudinary error ${res.status}: ${text}`)
+    const body = contentType.includes('application/json')
+      ? JSON.stringify((await res.json().catch(() => ({}))))
+      : await res.text().catch(() => '')
+    throw new Error(`Cloudinary error ${res.status}: ${body.slice(0, 200)}`)
   }
 
   const data = await res.json()

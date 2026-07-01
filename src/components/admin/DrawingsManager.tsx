@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react'
 import Image from 'next/image'
+import { uploadFile } from '@/lib/uploadHelpers'
 
 interface Props {
   images: string[]
@@ -24,16 +25,8 @@ export default function DrawingsManager({ images, slug, onChange }: Props) {
     const uploaded: string[] = []
     try {
       for (const file of Array.from(files)) {
-        const fd = new FormData()
-        fd.append('file', file)
-        fd.append('slug', `${slug}-drawings`)
-        const res = await fetch('/api/upload', { method: 'POST', body: fd })
-        const data = await res.json()
-        if (!res.ok) {
-          setError(data.error ?? `Upload failed (${res.status})`)
-          break
-        }
-        uploaded.push(data.url)
+        const url = await uploadFile(file, `${slug}-drawings`)
+        uploaded.push(url)
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Network error during upload')
