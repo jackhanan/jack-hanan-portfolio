@@ -1,23 +1,50 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+
+const DEFAULT_BOTTOM = 24
 
 export default function BackToTop() {
   const [visible, setVisible] = useState(false)
+  const [bottom, setBottom] = useState(DEFAULT_BOTTOM)
+  const buttonRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
-    function onScroll() { setVisible(window.scrollY > 400) }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
+    function update() {
+      setVisible(window.scrollY > 400)
+
+      const footer = document.querySelector('footer')
+      if (!footer) return
+
+      const footerRect = footer.getBoundingClientRect()
+      const viewportH = window.innerHeight
+
+      if (footerRect.top < viewportH) {
+        // Footer is partially in view — push button above it with 16px gap
+        const overlap = viewportH - footerRect.top
+        setBottom(DEFAULT_BOTTOM + overlap + 16)
+      } else {
+        setBottom(DEFAULT_BOTTOM)
+      }
+    }
+
+    update()
+    window.addEventListener('scroll', update, { passive: true })
+    window.addEventListener('resize', update, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', update)
+      window.removeEventListener('resize', update)
+    }
   }, [])
 
   return (
     <button
+      ref={buttonRef}
       onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
       aria-label="Back to top"
       style={{
         position: 'fixed',
-        bottom: '6rem',
+        bottom,
         right: '2rem',
         zIndex: 9000,
         background: 'none',
@@ -26,7 +53,7 @@ export default function BackToTop() {
         padding: '0.5rem',
         opacity: visible ? 1 : 0,
         pointerEvents: visible ? 'auto' : 'none',
-        transition: 'opacity 300ms ease',
+        transition: 'opacity 300ms ease, bottom 150ms ease',
         color: '#6B6B66',
         display: 'flex',
         flexDirection: 'column',
