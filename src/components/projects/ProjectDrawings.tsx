@@ -9,7 +9,7 @@ interface Props {
 }
 
 export default function ProjectDrawings({ drawings, projectTitle }: Props) {
-  const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(null)
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
 
   if (!drawings.length) return null
 
@@ -20,7 +20,7 @@ export default function ProjectDrawings({ drawings, projectTitle }: Props) {
           <figure
             key={src + i}
             className="w-full cursor-default"
-            onClick={() => setLightbox({ src, alt: `${projectTitle} — drawing ${i + 1}` })}
+            onClick={() => setLightboxIndex(i)}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -33,8 +33,14 @@ export default function ProjectDrawings({ drawings, projectTitle }: Props) {
         ))}
       </div>
 
-      {lightbox && (
-        <Lightbox src={lightbox.src} alt={lightbox.alt} onClose={() => setLightbox(null)} />
+      {lightboxIndex !== null && (
+        <Lightbox
+          images={drawings}
+          index={lightboxIndex}
+          alt={(i) => `${projectTitle} — drawing ${i + 1}`}
+          onClose={() => setLightboxIndex(null)}
+          onNav={setLightboxIndex}
+        />
       )}
     </>
   )

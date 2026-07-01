@@ -10,7 +10,7 @@ interface Props {
 }
 
 export default function ProjectGallery({ images, projectTitle }: Props) {
-  const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(null)
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
 
   if (!images.length) return null
 
@@ -22,7 +22,7 @@ export default function ProjectGallery({ images, projectTitle }: Props) {
             <div
               key={i}
               className="break-inside-avoid relative overflow-hidden bg-charcoal/5 cursor-default"
-              onClick={() => setLightbox({ src, alt: `${projectTitle} — image ${i + 1}` })}
+              onClick={() => setLightboxIndex(i)}
             >
               <Image
                 src={src}
@@ -37,8 +37,14 @@ export default function ProjectGallery({ images, projectTitle }: Props) {
         </div>
       </section>
 
-      {lightbox && (
-        <Lightbox src={lightbox.src} alt={lightbox.alt} onClose={() => setLightbox(null)} />
+      {lightboxIndex !== null && (
+        <Lightbox
+          images={images}
+          index={lightboxIndex}
+          alt={(i) => `${projectTitle} — image ${i + 1}`}
+          onClose={() => setLightboxIndex(null)}
+          onNav={setLightboxIndex}
+        />
       )}
     </>
   )

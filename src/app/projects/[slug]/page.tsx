@@ -2,9 +2,10 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import { getProject } from '@/lib/projects'
+import { getProject, getVisibleProjects } from '@/lib/projects'
 import ProjectGallery from '@/components/projects/ProjectGallery'
 import ProjectDrawings from '@/components/projects/ProjectDrawings'
+import ProjectNav from '@/components/projects/ProjectNav'
 import FadeIn from '@/components/ui/FadeIn'
 
 // All project pages are rendered on-demand at request time.
@@ -21,6 +22,11 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 export default async function ProjectPage({ params }: { params: { slug: string } }) {
   const project = await getProject(params.slug)
   if (!project || !project.visible) notFound()
+
+  const allVisible = await getVisibleProjects()
+  const idx = allVisible.findIndex((p) => p.id === project.id)
+  const prevProject = idx > 0 ? allVisible[idx - 1] : null
+  const nextProject = idx < allVisible.length - 1 ? allVisible[idx + 1] : null
 
   const paragraphs = project.description.split('\n\n').filter(Boolean)
 
@@ -100,7 +106,7 @@ export default async function ProjectPage({ params }: { params: { slug: string }
       )}
 
       {/* Back link */}
-      <div className="max-w-site mx-auto px-6 lg:px-12 mt-20 mb-8">
+      <div className="max-w-site mx-auto px-6 lg:px-12 mt-20 mb-2">
         <Link
           href="/projects"
           className="text-xs tracking-widest uppercase text-mid hover:text-charcoal transition-colors duration-200 font-sans inline-flex items-center gap-2"
@@ -111,6 +117,9 @@ export default async function ProjectPage({ params }: { params: { slug: string }
           All Projects
         </Link>
       </div>
+
+      {/* Prev / Next navigation */}
+      <ProjectNav prev={prevProject} next={nextProject} />
     </article>
   )
 }
