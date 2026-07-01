@@ -19,7 +19,7 @@ export default function ProjectDrawings({ drawings, projectTitle }: Props) {
         {drawings.map((src, i) => (
           <figure
             key={src + i}
-            className="w-full cursor-zoom-in"
+            className="w-full cursor-default"
             onClick={() => setLightbox({ src, alt: `${projectTitle} — drawing ${i + 1}` })}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}

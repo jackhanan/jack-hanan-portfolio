@@ -31,13 +31,15 @@ export default function Lightbox({ src, alt, onClose }: Props) {
     <div
       style={{
         position: 'fixed',
-        inset: 0,
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
         zIndex: 9999,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'rgba(0,0,0,0.9)',
-        padding: '2rem',
       }}
       onClick={onClose}
     >
@@ -67,8 +69,8 @@ export default function Lightbox({ src, alt, onClose }: Props) {
         alt={alt}
         onClick={(e) => e.stopPropagation()}
         style={{
-          maxWidth: '100%',
-          maxHeight: 'calc(100vh - 4rem)',
+          maxWidth: '90vw',
+          maxHeight: '90vh',
           width: 'auto',
           height: 'auto',
           objectFit: 'contain',

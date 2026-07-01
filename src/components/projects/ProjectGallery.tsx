@@ -21,7 +21,7 @@ export default function ProjectGallery({ images, projectTitle }: Props) {
           {images.map((src, i) => (
             <div
               key={i}
-              className="break-inside-avoid relative overflow-hidden bg-charcoal/5 cursor-zoom-in"
+              className="break-inside-avoid relative overflow-hidden bg-charcoal/5 cursor-default"
               onClick={() => setLightbox({ src, alt: `${projectTitle} — image ${i + 1}` })}
             >
               <Image
