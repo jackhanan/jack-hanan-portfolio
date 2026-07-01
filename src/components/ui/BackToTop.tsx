@@ -17,7 +17,7 @@ export default function BackToTop() {
       aria-label="Back to top"
       style={{
         position: 'fixed',
-        bottom: '2rem',
+        bottom: '6rem',
         right: '2rem',
         zIndex: 9000,
         background: 'none',
