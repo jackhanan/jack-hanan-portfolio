@@ -54,7 +54,7 @@ export default function NavClient({ projects }: Props) {
             href="/"
             className="font-serif text-lg font-light tracking-wide text-charcoal hover:text-accent transition-colors duration-200"
           >
-            Jack Hanan
+            Home
           </Link>
 
           {/* Desktop Nav */}
