@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { readProjects, writeProjects } from '@/lib/projects'
+import { readProjects, writeProjects, slugify } from '@/lib/projects'
 import { isValidToken } from '@/lib/auth'
 import { cookies } from 'next/headers'
 import { revalidatePath } from 'next/cache'
@@ -44,13 +44,15 @@ export async function PUT(request: Request, { params }: { params: { slug: string
     const idx = projects.findIndex((p) => p.id === params.slug)
     if (idx === -1) return NextResponse.json({ error: 'Not found' }, { status: 404 })
 
-    projects[idx] = { ...projects[idx], ...body, id: params.slug }
+    const newSlug = slugify(body.title ?? projects[idx].title)
+    projects[idx] = { ...projects[idx], ...body, id: newSlug }
     await writeProjects(projects)
 
     revalidatePath('/projects')
     revalidatePath(`/projects/${params.slug}`)
+    revalidatePath(`/projects/${newSlug}`)
     revalidatePath('/')
-    console.log(`[api/projects/${params.slug}] Update saved`)
+    console.log(`[api/projects/${params.slug}] Update saved (slug: ${params.slug} → ${newSlug})`)
     return NextResponse.json(projects[idx])
   } catch (err) {
     console.error(`[api/projects/${params.slug}] PUT error:`, err)

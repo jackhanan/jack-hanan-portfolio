@@ -46,9 +46,10 @@ export default function ProjectEditor({ initial, isNew = false }: Props) {
 
       if (res.ok) {
         setSaved(true)
-        router.refresh()
-        if (isNew) {
+        if (isNew || json.id !== initial.id) {
           router.push(`/admin/projects/${json.id}`)
+        } else {
+          router.refresh()
         }
       } else {
         setError(json.error ?? `Server error ${res.status}`)
