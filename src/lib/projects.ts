@@ -6,16 +6,16 @@ const KEY = 'projects'
 
 async function getOrSeed(): Promise<Project[]> {
   const redis = getRedis()
-  if (!redis) return defaultProjects as Project[]
+  if (!redis) return defaultProjects as unknown as Project[]
 
   try {
     const data = await redis.get<Project[]>(KEY)
     if (data) return data
     // First run — seed Redis from bundled defaults
     await redis.set(KEY, defaultProjects)
-    return defaultProjects as Project[]
+    return defaultProjects as unknown as Project[]
   } catch {
-    return defaultProjects as Project[]
+    return defaultProjects as unknown as Project[]
   }
 }
 
