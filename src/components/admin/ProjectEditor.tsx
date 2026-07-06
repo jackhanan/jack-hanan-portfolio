@@ -197,24 +197,23 @@ export default function ProjectEditor({ initial, isNew = false }: Props) {
         </div>
 
         {/* Bottom save bar */}
-        <div className="flex items-center justify-between pt-6 border-t border-[#2A2A28]">
-          <div>
-            {saved && <span className="text-xs text-green-400 font-sans">All changes saved</span>}
-            {error && <span className="text-xs text-red-400 font-sans truncate max-w-sm">{error}</span>}
-            {!saved && !error && <span className="text-xs text-[#555550] font-sans">Unsaved changes</span>}
+        <div className="pt-6 border-t border-[#2A2A28] space-y-3">
+          <div className="flex items-center justify-between">
+            <div>
+              {saved && <span className="text-xs text-green-400 font-sans">All changes saved</span>}
+              {error && <span className="text-xs text-red-400 font-sans truncate max-w-sm">{error}</span>}
+              {!saved && !error && <span className="text-xs text-[#555550] font-sans">Unsaved changes</span>}
+            </div>
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              className="text-xs tracking-widest uppercase font-sans text-[#111110] bg-[#E8E8E4] hover:bg-[#6B7C9B] hover:text-white px-5 py-2 rounded transition-colors duration-150 cursor-pointer disabled:opacity-50"
+            >
+              {saving ? 'Saving…' : 'Save Changes'}
+            </button>
           </div>
-          <button
-            onClick={handleSave}
-            disabled={saving}
-            className="text-xs tracking-widest uppercase font-sans text-[#111110] bg-[#E8E8E4] hover:bg-[#6B7C9B] hover:text-white px-5 py-2 rounded transition-colors duration-150 cursor-pointer disabled:opacity-50"
-          >
-            {saving ? 'Saving…' : 'Save Changes'}
-          </button>
-        </div>
 
-        {/* Delete project */}
-        {!isNew && (
-          <div className="pt-8 mt-4 border-t border-[#2A2A28]">
+          {!isNew && (
             <button
               onClick={handleDelete}
               disabled={deleting}
@@ -222,8 +221,8 @@ export default function ProjectEditor({ initial, isNew = false }: Props) {
             >
               {deleting ? 'Deleting…' : 'Delete Project'}
             </button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   )
