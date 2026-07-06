@@ -61,7 +61,7 @@ export default function ProjectEditor({ initial, isNew = false }: Props) {
   }
 
   async function handleDelete() {
-    if (!confirm(`Delete "${project.title}"? This cannot be undone.`)) return
+    if (!confirm(`Are you sure you want to delete this project? This cannot be undone.`)) return
     setDeleting(true)
     setError(null)
     try {
@@ -92,15 +92,6 @@ export default function ProjectEditor({ initial, isNew = false }: Props) {
         </h1>
         <div className="flex items-center gap-3">
           {saved && <span className="text-xs text-green-400 font-sans">Saved</span>}
-          {!isNew && (
-            <button
-              onClick={handleDelete}
-              disabled={deleting}
-              className="text-xs text-red-400 hover:text-red-300 font-sans px-3 py-1.5 border border-red-400/30 hover:border-red-300/40 rounded transition-colors duration-150 cursor-pointer disabled:opacity-50"
-            >
-              {deleting ? 'Deleting…' : 'Delete'}
-            </button>
-          )}
           <button
             onClick={handleSave}
             disabled={saving}
@@ -220,6 +211,19 @@ export default function ProjectEditor({ initial, isNew = false }: Props) {
             {saving ? 'Saving…' : 'Save Changes'}
           </button>
         </div>
+
+        {/* Delete project */}
+        {!isNew && (
+          <div className="pt-8 mt-4 border-t border-[#2A2A28]">
+            <button
+              onClick={handleDelete}
+              disabled={deleting}
+              className="w-full py-3 text-sm font-sans text-red-400 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 hover:border-red-500/50 rounded transition-colors duration-150 cursor-pointer disabled:opacity-50"
+            >
+              {deleting ? 'Deleting…' : 'Delete Project'}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   )
