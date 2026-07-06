@@ -130,12 +130,11 @@ export default function ProjectEditor({ initial, isNew = false }: Props) {
             <label htmlFor="year" className={labelClass}>Year</label>
             <input
               id="year"
-              type="number"
+              type="text"
               value={project.year}
-              onChange={(e) => update('year', Number(e.target.value))}
+              onChange={(e) => update('year', e.target.value)}
               className={inputClass}
-              min={2000}
-              max={2099}
+              placeholder="2024 or 2023–2026"
             />
           </div>
           <div>

@@ -44,7 +44,7 @@ export async function POST(request: Request) {
     const newProject: Project = {
       id,
       title: body.title ?? 'Untitled Project',
-      year: body.year ?? new Date().getFullYear(),
+      year: String(body.year ?? new Date().getFullYear()),
       category: body.category ?? 'Academic',
       description: body.description ?? '',
       heroImage: body.heroImage ?? '',

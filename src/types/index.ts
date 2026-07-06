@@ -1,7 +1,7 @@
 export interface Project {
   id: string
   title: string
-  year: number
+  year: string
   category: string
   description: string
   heroImage: string

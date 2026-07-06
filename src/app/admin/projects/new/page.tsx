@@ -4,7 +4,7 @@ import type { Project } from '@/types'
 const blank: Project = {
   id: 'new',
   title: '',
-  year: new Date().getFullYear(),
+  year: String(new Date().getFullYear()),
   category: 'Academic',
   description: '',
   heroImage: '',
