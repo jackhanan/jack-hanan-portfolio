@@ -59,8 +59,6 @@ export default function NavClient({ projects }: Props) {
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-8" aria-label="Primary navigation">
-            <Link href="/about" className={linkClass('/about')}>About</Link>
-
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setDropdownOpen((v) => !v)}
@@ -94,6 +92,7 @@ export default function NavClient({ projects }: Props) {
               )}
             </div>
 
+            <Link href="/about" className={linkClass('/about')}>About</Link>
             <Link href="/contact" className={linkClass('/contact')}>Contact</Link>
           </nav>
 
