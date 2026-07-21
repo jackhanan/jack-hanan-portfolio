@@ -10,6 +10,12 @@ export const metadata: Metadata = {
     template: '%s — Jack Hanan',
   },
   description: 'Architecture student and designer. Portfolio of academic, research, and professional work.',
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: '32x32', type: 'image/x-icon' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+    ],
+  },
   openGraph: {
     title: 'Jack Hanan — Portfolio',
     description: 'Architecture student and designer. Portfolio of academic, research, and professional work.',
