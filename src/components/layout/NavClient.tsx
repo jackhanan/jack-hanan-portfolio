@@ -123,13 +123,6 @@ export default function NavClient({ projects }: Props) {
           style={{ backgroundColor: '#F7F7F5' }}
         >
           <nav className="flex flex-col px-8 pt-8 pb-16" aria-label="Mobile navigation">
-            <Link
-              href="/about"
-              className="py-5 font-serif text-2xl font-light text-charcoal border-b border-charcoal/10 hover:text-accent transition-colors duration-200"
-            >
-              About
-            </Link>
-
             <div className="border-b border-charcoal/10">
               <button
                 onClick={() => setMobileProjectsOpen((v) => !v)}
@@ -165,6 +158,13 @@ export default function NavClient({ projects }: Props) {
                 </div>
               )}
             </div>
+
+            <Link
+              href="/about"
+              className="py-5 font-serif text-2xl font-light text-charcoal border-b border-charcoal/10 hover:text-accent transition-colors duration-200"
+            >
+              About
+            </Link>
 
             <Link
               href="/contact"

@@ -17,11 +17,14 @@ export default function ProjectGallery({ images, projectTitle }: Props) {
   return (
     <>
       <section className="mt-16">
-        <div className="columns-1 sm:columns-2 lg:columns-2 gap-4 space-y-4">
+        <div className="arch-rule pt-8 mb-10">
+          <h2 className="font-sans text-xs tracking-widest uppercase text-mid">Gallery</h2>
+        </div>
+        <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
           {images.map((src, i) => (
             <div
               key={i}
-              className="break-inside-avoid relative overflow-hidden bg-charcoal/5 cursor-default"
+              className="break-inside-avoid relative overflow-hidden bg-charcoal/5 cursor-pointer"
               onClick={() => setLightboxIndex(i)}
             >
               <Image

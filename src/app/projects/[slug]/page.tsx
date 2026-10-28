@@ -74,14 +74,15 @@ export default async function ProjectPage({ params }: { params: { slug: string }
       {/* Description */}
       <FadeIn delay={150}>
         <div className="max-w-site mx-auto px-6 lg:px-12 mt-8 md:mt-12">
-          <div className="arch-rule pt-10">
-            <div className="space-y-5">
-              {paragraphs.map((para, i) => (
-                <p key={i} className="text-base lg:text-lg text-charcoal/80 font-sans font-light leading-[1.75]">
-                  {para}
-                </p>
-              ))}
-            </div>
+          <div className="arch-rule pt-8 mb-10">
+            <h2 className="font-sans text-xs tracking-widest uppercase text-mid">Description</h2>
+          </div>
+          <div className="space-y-5">
+            {paragraphs.map((para, i) => (
+              <p key={i} className="text-base lg:text-lg text-charcoal/80 font-sans font-light leading-[1.75]">
+                {para}
+              </p>
+            ))}
           </div>
         </div>
       </FadeIn>
@@ -97,7 +98,7 @@ export default async function ProjectPage({ params }: { params: { slug: string }
       {project.drawings && project.drawings.length > 0 && (
         <FadeIn delay={250} rootMargin="0px 0px 500px 0px">
           <div className="max-w-site mx-auto px-6 lg:px-12 mt-20">
-            <div className="arch-rule pt-8 mb-12">
+            <div className="arch-rule pt-8 mb-10">
               <h2 className="font-sans text-xs tracking-widest uppercase text-mid">Drawings</h2>
             </div>
             <ProjectDrawings drawings={project.drawings} projectTitle={project.title} />
